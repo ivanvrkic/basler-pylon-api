@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015-2017 UniZG, Zagreb. All rights reserved.
- * (c) 2015-2017 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -13,7 +13,8 @@
   \brief  Image acquisition thread.
 
   \author Tomislav Petkovic
-  \date   2017-02-13
+  \author Ivan Vrkic
+  \date   2021-05-10
 */
 
 #include "BatchAcquisitionStdAfx.h"
