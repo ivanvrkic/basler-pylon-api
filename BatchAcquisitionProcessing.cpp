@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015 UniZG, Zagreb. All rights reserved.
- * (c) 2015 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -15,7 +15,7 @@
   This file contains functions for general structured light processing.
 
   \author Tomislav Petkovic, Tomislav Pribanic
-  \date   2015-05-28
+  \date   2021-04-20
 */
 
 
@@ -1404,7 +1404,7 @@ DepthFromDatatypeString_inline(
                                wchar_t const * const datatype
                                )
 {
-  int depth = CV_USRTYPE1;
+  int depth = -1;
 
   assert(NULL != datatype);
   if (NULL == datatype) return depth;
@@ -1595,53 +1595,6 @@ ReadcvMatFromRAWFile(
 
 
 
-//! Reads CvMat from RAW file.
-/*!
-  Reads CvMat from RAW binary file.
-
-  \see ReadcvMatFromRAWFile
-
-  \param filename_in       Filename where the data is stored.
-  \param datatype_in       Datatype string, e.g. INT8, UINT8,... etc.
-  \param cols_out       Address where number of columns will be stored. May be NULL.
-  \param rows_out       Address where number of rows will be stored. May be NULL.
-  \return Returns pointer to cv::Mat or NULL if data cannot be read.
-*/
-CvMat *
-ReadCvMatFromRAWFile(
-                     char const * const filename_in,
-                     char const * const datatype_in,
-                     int * const cols_out = NULL,
-                     int * const rows_out = NULL
-                     )
-{
-  assert(NULL != filename_in);
-  if (NULL == filename_in) return NULL;
-
-  assert(NULL != datatype_in);
-  if (NULL == datatype_in) return NULL;
-
-  std::wstring filename = L"";
-  for (int i = 0; 0 != filename_in[i]; ++i) filename.push_back( filename_in[i] );
-
-  std::wstring datatype = L"";
-  for (int i = 0; 0 != datatype_in[i]; ++i) datatype.push_back( datatype_in[i] );
-
-  cv::Mat * matrix_in = ReadcvMatFromRAWFile(filename.c_str(), datatype.c_str(), cols_out, rows_out);
-  assert(NULL != matrix_in);
-  if (NULL == matrix_in) return NULL;
-
-  CvMat matrix_tmp = * matrix_in;
-  CvMat * const matrix_out = cvCloneMat(&matrix_tmp);
-  assert(NULL != matrix_out);
-
-  SAFE_DELETE(matrix_in);
-
-  return matrix_out;
-}
-/* ReadCvMatFromRAWFile */
-
-
 
 //! Writes cv::Mat to RAW file.
 /*!
@@ -1742,37 +1695,6 @@ WritecvMatToRAWFile(
   int const closed = fclose(fid);
   assert(0 == closed);
   if (0 == closed) fid = NULL;
-
-  return result;
-}
-/* WritecvMatToRAWFile */
-
-
-
-//! Writes CvMat to RAW file.
-/*!
-  Writes CvMat to RAW file. Only 1-channel data is supported.
-
-  \see WritecvMatToRAWFile
-
-  \param filename_in       Filename where the matrix should be dumped.
-  \param matrix_in   Pointer to CvMat structure.
-  \return Returns number of bytes written or -1 if unsuccessfull.
-*/
-int
-WriteCvMatToRAWFile(
-                    char const * const filename_in,
-                    CvMat * const matrix_in
-                    )
-{
-  assert(NULL != matrix_in);
-  if (NULL == matrix_in) return -1;
-
-  std::wstring filename = L"";
-  for (int i = 0; 0 != filename_in[i]; ++i) filename.push_back( filename_in[i] );
-
-  cv::Mat matrix = cv::cvarrToMat(matrix_in);
-  int const result = WritecvMatToRAWFile(filename.c_str(), &matrix);
 
   return result;
 }

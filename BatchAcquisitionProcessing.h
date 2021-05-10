@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015 UniZG, Zagreb. All rights reserved.
- * (c) 2015 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -15,7 +15,7 @@
   This file contains definitions if data structures and functions for general processing.
 
   \author Tomislav Petkovic, Tomislav Pribanic
-  \date   2015-05-28
+  \date   2021-04-21
 */
 
 
@@ -151,7 +151,7 @@ struct ImageSet_
   and two extrinsic parameters, rotation matrix and camera center.
 */
 typedef
-struct ProjectiveGeometry_
+struct alignas(32) ProjectiveGeometry_
 {
   double fx; //!< Focus along x direction.
   double fy; //!< Focus along y direction.
@@ -171,6 +171,37 @@ struct ProjectiveGeometry_
 
   std::wstring * name; //!< Unique name which identifies camera or projector.
 
+  
+  //! Operator new.
+  /*!
+    Default operator new which ensures memory alignment.
+    
+    \param sz Size of the object.
+  */
+  void * operator new(
+                      size_t sz
+                      )
+  {
+    return _aligned_malloc(sz, 32);
+  }
+  /* ProjectiveGeometry_::new */
+
+  
+  //! Operator delete.
+  /*!
+    Default operator delete.
+    
+    \param ptr    Object pointer.
+  */
+  void operator delete(
+                       void * ptr
+                       )
+  {
+    _aligned_free(ptr);
+  }
+  /* ProjectiveGeometry_::delete */
+  
+  
   //! Constructor.
   ProjectiveGeometry_();
 
@@ -219,14 +250,8 @@ struct ProjectiveGeometry_
 //! Reads cv::Mat from RAW file.
 cv::Mat * ReadcvMatFromRAWFile(wchar_t const * const, wchar_t const * const, int * const, int * const);
 
-//! Reads CvMat from RAW file.
-CvMat * ReadCvMatFromRAWFile(char const * const, char const * const, int * const, int * const);
-
 //! Writes cv::Mat to RAW file.
 int WritecvMatToRAWFile(wchar_t const * const, cv::Mat * const);
-
-//! Writes CvMat to RAW file.
-int WriteCvMatToRAWFile(char const * const, CvMat * const);
 
 
 

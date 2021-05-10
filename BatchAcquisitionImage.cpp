@@ -3,7 +3,7 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -14,7 +14,7 @@
   All functions use Windows Imaging Components (WIC).
 
   \author Tomislav Petkovic
-  \date   2016-04-05
+  \date   2021-04-20
 */
 
 
@@ -658,7 +658,7 @@ ImageStatistics(
   if (0 == height) return E_INVALIDARG;
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {

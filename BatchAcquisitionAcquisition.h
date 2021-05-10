@@ -32,6 +32,8 @@
 #include "BatchAcquisitionDebug.h"
 #include "BatchAcquisitionSapera.h"
 #include "BatchAcquisitionFlyCapture2.h"
+#include "BatchAcquisitionSpinnaker.h"
+#include "BatchAcquisitionPylon.h"
 #include "BatchAcquisitionFromFile.h"
 
 
@@ -86,10 +88,12 @@ struct AcquisitionParameters_
 
   SRWLOCK sLockAT; //!< Slim lock for acquisition thread in exclusive mode and other threads in shared mode.
 
-  AcquisitionParametersSapera * pSaperaSDK; //!< Pointer to camera parameters if Teledyne Dalsa Sapera SDK is used.
   AcquisitionParametersFlyCapture2 * pFlyCapture2SDK; //!< Pointer to camera parameters if PointGrey FlyCapture2 SDK is used.
+  AcquisitionParametersSapera * pSaperaSDK; //!< Pointer to camera parameters if Teledyne Dalsa Sapera SDK is used.
+  AcquisitionParametersPylon * pPylonSDK; //!< Pointer to camera parameters if Basler's Pylon SDK is used.
+  AcquisitionParametersSpinnaker * pSpinnakerSDK; //!< Pointer to camera parameters if Flir's Spinnaker SDK is used.
   AcquisitionParametersFromFile * pFromFile; //!< Pointer to camera parameters if dummy acquisition from file is used.
-
+  
   static int const nFrames = 18; //!< Number of frame buffers.
 
   __int64 exposureTime_QPC; //!< Exposure time in QPC units.

@@ -151,6 +151,7 @@ AcquisitionParametersBlank_inline(
   P->pFlyCapture2SDK = NULL;
   P->pSaperaSDK = NULL;
   P->pPylonSDK = NULL;
+  P->pSpinnakerSDK = NULL;
   P->pFromFile = NULL;
 
   P->exposureTime_QPC = -1;
@@ -187,10 +188,13 @@ StopPendingTransfers_inline(
   bool const stop_pylon = AcquisitionParametersPylonStopTransfer(P->pPylonSDK, P->exposureTime_achieved_us, P->nFrames);
   assert(true == stop_pylon);
 
+  bool const stop_spinnaker = AcquisitionParametersSpinnakerStopTransfer(P->pSpinnakerSDK, P->exposureTime_achieved_us, P->nFrames);
+  assert(true == stop_spinnaker);
+
   bool const stop_fromfile = AcquisitionParametersFromFileStopTransfer(P->pFromFile);
   assert(true == stop_fromfile);
 
-  bool const stop = stop_flycapture2 && stop_sapera && stop_fromfile;
+  bool const stop = stop_flycapture2 && stop_sapera && stop_pylon && stop_spinnaker && stop_fromfile;
 
   return stop;
 }
@@ -220,13 +224,16 @@ StartImageTransfers_inline(
   bool const start_sapera = AcquisitionParametersSaperaStartTransfer(P->pSaperaSDK);
   assert(true == start_sapera);
 
-  bool const start_pylon = AcquisitionParametersPylonStartTransfer(P->ppylonSDK);
+  bool const start_pylon = AcquisitionParametersPylonStartTransfer(P->pPylonSDK);
   assert(true == start_pylon);
+
+  bool const start_spinnaker = AcquisitionParametersSpinnakerStartTransfer(P->pSpinnakerSDK);
+  assert(true == start_spinnaker);
 
   bool const start_fromfile = AcquisitionParametersFromFileStartTransfer(P->pFromFile, NULL);
   assert(true == start_fromfile);
 
-  bool const start = start_flycapture2 && start_sapera && start_pylon && start_fromfile;
+  bool const start = start_flycapture2 && start_sapera && start_pylon && start_spinnaker && start_fromfile;
 
   return start;
 }
@@ -261,6 +268,9 @@ AcquisitionParametersRelease_inline(
 
   // Release Pylon SDK classes.
   AcquisitionParametersPylonRelease(P->pPylonSDK);
+
+  // Release Spinnaker SDK classes.
+  AcquisitionParametersSpinnakerRelease(P->pSpinnakerSDK);
 
   // Release dummy camera classes.
   AcquisitionParametersFromFileRelease(P->pFromFile);
@@ -367,6 +377,19 @@ AdjustCameraExposureTime_inline(
         }
       /* if */
     }
+  else if (NULL != P->pSpinnakerSDK)
+    {
+      bool const set_spinnaker = AcquisitionParametersSpinnakerAdjustExposureTime(P->pSpinnakerSDK, P->CameraID, exposureTime_requested_us, &exposureTime_achieved_us);
+      assert(true == set_spinnaker);
+      if (true == set_spinnaker)
+        {
+          double const exposureTime_max_us = (exposureTime_achieved_us > exposureTime_requested_us)? exposureTime_achieved_us : exposureTime_requested_us;
+          P->exposureTime_QPC = (__int64)( exposureTime_max_us * P->pWindow->us_to_ticks + 0.5 );
+          P->exposureTime_requested_us = exposureTime_requested_us;
+          P->exposureTime_achieved_us = exposureTime_achieved_us;
+        }
+      /* if */
+    }
   else if (NULL != P->pFromFile)
     {
       bool const set_fromfile = AcquisitionParametersFromFileAdjustExposureTime(P->pFromFile, exposureTime_requested_us, &exposureTime_achieved_us);
@@ -421,7 +444,14 @@ StartExposureTimeout_inline(
   assert(NULL != P);
   if (NULL == P) return;
 
-  if ( (NULL == P->pSaperaSDK) && (NULL == P->pFlyCapture2SDK) && (NULL == P->pPylonSDK) ) return;
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
+       (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) )
+    {
+      return;
+    }
+  /* if */
   assert(NULL == P->pFromFile);
 
   assert(NULL != P->pWindow);
@@ -676,6 +706,7 @@ DispatchEventsAfterTrigger_inline(
   bool const have_FlyCapture2SDK = (NULL != parameters->pFlyCapture2SDK);
   bool const have_SaperaSDK = (NULL != parameters->pSaperaSDK);
   bool const have_PylonSDK = (NULL != parameters->pPylonSDK);
+  bool const have_SpinnakerSDK = (NULL != parameters->pSpinnakerSDK);
   bool const have_FromFile = (NULL != parameters->pFromFile);
 
   int const CameraID = parameters->CameraID;
@@ -956,8 +987,12 @@ AcquisitionThread(
 
   AcquisitionParametersSapera * const pSaperaSDK = parameters->pSaperaSDK;
   //assert(NULL != pSaperaSDK);
+
   AcquisitionParametersPylon * const pPylonSDK = parameters->pPylonSDK;
   //assert(NULL != pPylonSDK);
+
+  AcquisitionParametersSpinnaker * const pSpinnakerSDK = parameters->pSpinnakerSDK;
+  //assert(NULL != pSpinnakerSDK);
 
   AcquisitionParametersFromFile * const pFromFile = parameters->pFromFile;
   //assert(NULL != pFromFile);
@@ -965,9 +1000,15 @@ AcquisitionThread(
   bool const have_FlyCapture2SDK = (NULL != pFlyCapture2SDK); // True if FlyCapture2 SKD is used.
   bool const have_SaperaSDK = (NULL != pSaperaSDK); // True if Sapera SDK is used.
   bool const have_PylonSDK = (NULL != pPylonSDK); // True if Pylon SDK is used.
+  bool const have_SpinnakerSDK = (NULL != pSpinnakerSDK); // True if Spinnaker SDK is used.
   bool const have_FromFile = (NULL != pFromFile); // True if dummy from file acquisition is used.
-  
-  assert( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) || (true == have_PylonSDK) || (true == have_FromFile) );
+
+  assert( (true == have_FlyCapture2SDK) ||
+          (true == have_SaperaSDK) ||
+          (true == have_PylonSDK) ||
+          (true == have_SpinnakerSDK) ||
+          (true == have_FromFile)
+          );
 
   int CameraID = parameters->CameraID;
   assert( (0 <= CameraID) && (CameraID < (int)(pSynchronization->Camera.size())) );
@@ -1190,47 +1231,48 @@ AcquisitionThread(
 
              1) Ending the blocking acquisition mode
 
-             In blocking acquistion mode all projected frames are always captured by design.
-             The event MAIN_END_DRAW is therefore raised in the rendering thread once all
-             MAIN_END_CAMERA events are raised in the callback transfer functions after the
-             last frame is acquired and successfully transfered from the camera.
+        In blocking acquistion mode all projected frames are always captured by design.
+        The event MAIN_END_DRAW is therefore raised in the rendering thread once all
+        MAIN_END_CAMERA events are raised in the callback transfer functions after the
+        last frame is acquired and successfully transfered from the camera.
 
 
-             2) Ending the non-blocking acquisition mode
+        2) Ending the non-blocking acquisition mode
 
-             In non-blocking acquisition mode some projected frames may be dropped. If the last
-             frame in the sequence is dropped then the MAIN_END_CAMERA event cannot be raised at all.
-             Therefore, in non-blocking acquisition mode only reliable place where the MAIN_END_DRAW
-             can be signalled is after all images are presented by the rendering thread. However,
-             at that time all images are not yet captured so the rendering thread does not immediately
-             signal MAIN_END_DRAW but instead it waits for a pre-specified time for MAIN_END_CAMERA
-             events to be signalled. If all MAIN_END_CAMERA events are signalled then the last
-             frame was successfully captured, otherwise the last frame was dropped for at least one
-             camera.
-
-
-             3) Ending the acquisition for a fixed SL pattern
-
-             When a fixed SL pattern is used the rendering thread has nothing particular to do once
-             the frame is rendered as almost all work is performed by the acquisition thread.
-             The only event executed by the rendering thread is CAMERA_SYNC_TRIGGERS to ensure
-             multiple cameras are synchronously triggered. In this case we use both MAIN_END_CAMERA
-             and MAIN_END_DRAW events. First, MAIN_END_CAMERA events will be signalled from the
-             image transfer callbacks after the last frame is acquired. After triggering the camera
-             for the last requested frame the acquisition threads will wait for MAIN_END_CAMERA events.
-             The normal event cycle for a fixed SL pattern will than continue with the
-             CAMERA_SYNC_TRIGGERS event which will raise the MAIN_END_DRAW event and stop
-             the acquisition.
+    In non-blocking acquisition mode some projected frames may be dropped. If the last
+    frame in the sequence is dropped then the MAIN_END_CAMERA event cannot be raised at all.
+    Therefore, in non-blocking acquisition mode only reliable place where the MAIN_END_DRAW
+    can be signalled is after all images are presented by the rendering thread. However,
+    at that time all images are not yet captured so the rendering thread does not immediately
+    signal MAIN_END_DRAW but instead it waits for a pre-specified time for MAIN_END_CAMERA
+                                                      events to be signalled. If all MAIN_END_CAMERA events are signalled then the last
+                                                        frame was successfully captured, otherwise the last frame was dropped for at least one
+                                                                                                                                       camera.
 
 
-             DIFFERENCES BETWEEN CAMERA DRIVES
+                                                                                                                                       3) Ending the acquisition for a fixed SL pattern
 
-             There exist several different camera drives which may be used. These are:
+                                                                                                                                       When a fixed SL pattern is used the rendering thread has nothing particular to do once
+                                                                                                                                                                                                                           the frame is rendered as almost all work is performed by the acquisition thread.
+                                                                                                                                                                                                                           The only event executed by the rendering thread is CAMERA_SYNC_TRIGGERS to ensure
+                                                                                                                                                                                                                           multiple cameras are synchronously triggered. In this case we use both MAIN_END_CAMERA
+                                                                                                                                                                                                                           and MAIN_END_DRAW events. First, MAIN_END_CAMERA events will be signalled from the
+                                                                                                                                                                                                                           image transfer callbacks after the last frame is acquired. After triggering the camera
+                                                                                                                                                                                                                           for the last requested frame the acquisition threads will wait for MAIN_END_CAMERA events.
+                                                                                                                                                                                                                           The normal event cycle for a fixed SL pattern will than continue with the
+                                                                                                                                                                                                                           CAMERA_SYNC_TRIGGERS event which will raise the MAIN_END_DRAW event and stop
+                                                                                                                                                                                                                           the acquisition.
 
-             1) FlyCapture2 API (PointGrey's cameras),
+
+                                                                                                                                                                                                                           DIFFERENCES BETWEEN CAMERA DRIVES
+
+                                                                                                                                                                                                                           There exist several different camera drives which may be used. These are:
+
+             1) FlyCapture2 API (PointGrey's/FLIR's cameras),
              2) Sapera API (Teledyne Dalsa's cameras),
-             2) Pylon API (Basler's cameras), and
-             3) dummy acquisition from file.
+             3) Pylon API (Basler's cameras),
+             4) Spinnaker API (FLIR's cameras), and
+             5) dummy acquisition from file.
 
              A normal sequence of events for each camera for the acquisition of one frame is:
              CAMERA_SEND_TRIGGER->(CAMERA_REPEAT_TRIGGER)->CAMERA_EXPOSURE_END->CAMERA_TRANSFER_END
@@ -1274,9 +1316,14 @@ AcquisitionThread(
              to re-trigger the camera or abort the acquisition.
 
              3) Pylon API
-             TODO
 
-             4) Dummy acquisition from file
+             TODO: Add description!
+
+             4) Spinnaker API
+
+             TODO: Add description!
+
+             5) Dummy acquisition from file
 
              This is a simple driver which reads the image data from a file. When acquisition from file is used
              the CAMERA_SEND_TRIGGER events immediately raises the CAMERA_EXPOSURE_END event.
@@ -1422,10 +1469,14 @@ AcquisitionThread(
                   {
                     // There is no API call to test if camera is ready!
                   }
-                else if (true== have_PylonSDK)
-                {
-                  //TODO
-                }
+                else if (true == have_PylonSDK)
+                  {
+                    // TODO: Add test for camera readiness.
+                  }
+                else if (true == have_SpinnakerSDK)
+                  {
+                    // TODO: Add test for camera readiness.
+                  }
                 else if (true == have_FromFile)
                   {
                     // Nothing to do!
@@ -1697,8 +1748,8 @@ AcquisitionThread(
                            )
                         {
                           /* There are two ways to precisely delay the trigger with regard to the VBLANK interrupt:
-                             first is a pure software delay implemted by using a spinlock timer and
-                             second is a pure hardware delay by using a bulit-in trigger delay timer on the camera itself.
+                             the first is a pure software delay implemented by using a spinlock timer and
+                             the second is a pure hardware delay which uses a bulit-in trigger delay timer on the camera itself.
                              Which delay to use is indicated by the type of the SL pattern.
 
                              As the software delay using a spinlock timer cannot fail it will be used as a default solution;
@@ -1738,10 +1789,19 @@ AcquisitionThread(
                           else if (true == have_PylonSDK)
                             {
                               adjust = AcquisitionParametersPylonSetExposureAndDelayTimes(
-                                                                                           pPylonSDK,
-                                                                                           (true == use_hardware_delay)? &hardware_delay_ms : NULL,
-                                                                                           &( sImageMetadata.exposure )
-                                                                                           );
+                                                                                          pPylonSDK,
+                                                                                          (true == use_hardware_delay)? &hardware_delay_ms : NULL,
+                                                                                          &( sImageMetadata.exposure )
+                                                                                          );
+                              assert(true == adjust);
+                            }
+                          else if (true == have_SpinnakerSDK)
+                            {
+                              adjust = AcquisitionParametersSpinnakerSetExposureAndDelayTimes(
+                                                                                              pSpinnakerSDK,
+                                                                                              (true == use_hardware_delay)? &hardware_delay_ms : NULL,
+                                                                                              &( sImageMetadata.exposure )
+                                                                                              );
                               assert(true == adjust);
                             }
                           /* if */
@@ -2088,7 +2148,47 @@ AcquisitionThread(
                 }
               else if (true == have_PylonSDK)
                 {
-                  //todo
+                  // TODO: If possible add camera readiness test here!
+
+                  assert(true == trigger_ready);
+
+                  BOOL const qpc_before = QueryPerformanceCounter( &QPC_before_trigger );
+                  assert(TRUE == qpc_before);
+
+                  if (true == trigger_on_time)
+                    {
+#ifdef HAVE_PYLON_SDK
+                      // TODO: Triggering code goes here!
+#else /* HAVE_PYLON_SDK */
+                      assert(false == triggered);
+#endif /* HAVE_PYLON_SDK */
+                    }
+                  /* if */
+
+                  BOOL const qpc_after = QueryPerformanceCounter( &QPC_after_trigger );
+                  assert(TRUE == qpc_after);
+                }
+              else if (true == have_SpinnakerSDK)
+                {
+                  // TODO: If possible add camera readiness test here!
+
+                  assert(true == trigger_ready);
+
+                  BOOL const qpc_before = QueryPerformanceCounter( &QPC_before_trigger );
+                  assert(TRUE == qpc_before);
+
+                  if (true == trigger_on_time)
+                    {
+#ifdef HAVE_SPINNAKER_SDK
+                      // TODO: Triggering code goes here!
+#else /* HAVE_SPINNAKER_SDK */
+                      assert(false == triggered);
+#endif /* HAVE_SPINNAKER_SDK */
+                    }
+                  /* if */
+
+                  BOOL const qpc_after = QueryPerformanceCounter( &QPC_after_trigger );
+                  assert(TRUE == qpc_after);
                 }
               else if (true == have_FromFile)
                 {
@@ -2518,9 +2618,49 @@ AcquisitionThread(
                   assert(TRUE == qpc_after);
                 }
               else if (true == have_PylonSDK)
-              {
-                //TODO
-              }
+                {
+                  // TODO: If possible add camera readiness test here!
+
+                  assert(true == trigger_ready);
+
+                  BOOL const qpc_before = QueryPerformanceCounter( &QPC_before_trigger );
+                  assert(TRUE == qpc_before);
+
+                  if (true == trigger_on_time)
+                    {
+#ifdef HAVE_PYLON_SDK
+                      // TODO: Triggering code goes here!
+#else /* HAVE_PYLON_SDK */
+                      assert(false == triggered);
+#endif /* HAVE_PYLON_SDK */
+                    }
+                  /* if */
+
+                  BOOL const qpc_after = QueryPerformanceCounter( &QPC_after_trigger );
+                  assert(TRUE == qpc_after);
+                }
+              else if (true == have_SpinnakerSDK)
+                {
+                  // TODO: If possible add camera readiness test here!
+
+                  assert(true == trigger_ready);
+
+                  BOOL const qpc_before = QueryPerformanceCounter( &QPC_before_trigger );
+                  assert(TRUE == qpc_before);
+
+                  if (true == trigger_on_time)
+                    {
+#ifdef HAVE_SPINNAKER_SDK
+                      // TODO: Triggering code goes here!
+#else /* HAVE_SPINNAKER_SDK */
+                      assert(false == triggered);
+#endif /* HAVE_SPINNAKER_SDK */
+                    }
+                  /* if */
+
+                  BOOL const qpc_after = QueryPerformanceCounter( &QPC_after_trigger );
+                  assert(TRUE == qpc_after);
+                }
               else if (true == have_FromFile)
                 {
                   assert(false); // Always break! This code should not be reachable unless there exists an error in signal dispatching.
@@ -2775,10 +2915,14 @@ AcquisitionThread(
                     }
                   /* if */
                 }
-              else if (true == have_PylonSDK) 
-              {
-                //TODO
-              }
+              else if (true == have_PylonSDK)
+                {
+                  // TODO: Add Pylon specific code here!
+                }
+              else if (true == have_SpinnakerSDK)
+                {
+                  // TODO: Add Spinnaker specific code here!
+                }
               else if (true == have_FromFile)
                 {
                   // Fetch next image.
@@ -2843,11 +2987,13 @@ AcquisitionThread(
                              Depending on the camera SDK we raise the CAMERA_TRANSFER_END event here or in the callback function.
                           */
 
-                          if ( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) || (true == have_PylonSDK))
+                          // TODO: Add code to handle CAMERA_TRASFER_END for Pylon and Spinnaker SDKs!
+
+                          if ( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) )
                             {
                               // Event CAMERA_TRANSFER_END is raised by the transfer callback function!
                             }
-                          else // !( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) || (true == have_PylonSDK))
+                          else // !( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) )
                             {
                               assert( false == DebugIsSignalled(pSynchronization, CAMERA_TRANSFER_END, CameraID) );
 
@@ -2868,7 +3014,9 @@ AcquisitionThread(
                          Depending on the camera SDK we raise the CAMERA_TRANSFER_END event here or in the callback function.
                       */
 
-                      if ( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) || (true == have_PylonSDK))
+                      // TODO: Add code to handle CAMERA_TRASFER_END for Pylon and Spinnaker SDKs!
+
+                      if ( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) )
                         {
                           // Event CAMERA_TRANSFER_END is raised by the transfer callback function!
                         }
@@ -3137,7 +3285,11 @@ AcquisitionThread(
               Debugfprintf(stderr, gDbgTriggerTimeoutForFrame, CameraID + 1, sImageMetadata.key + 1);
 
               // Exposure timer is only used for real camera SDKs.
-              assert( (true == have_FlyCapture2SDK) || (true == have_SaperaSDK) || (true == have_PylonSDK));
+              assert( (true == have_FlyCapture2SDK) ||
+                      (true == have_SaperaSDK) ||
+                      (true == have_PylonSDK) ||
+                      (true == have_SpinnakerSDK)
+                      );
 
               // Timeout means exposure never completed.
               assert( true == parameters->fExposureInProgress );
@@ -3388,7 +3540,21 @@ AcquisitionThreadStart(
         //assert(NULL != P->pPylonSDK);
         if ( (NULL == P->pPylonSDK) && (true == fallback_to_from_file) )
           {
-            std::cout << std::endl << gMsgAcquisitionSaperaLTRevertToFromFile << std::endl;
+            std::cout << std::endl << gMsgAcquisitionPylonRevertToFromFile << std::endl;
+            goto ACQUISITION_THREAD_START_SDK_FROM_FILE;
+          }
+        /* if */
+      }
+      break;
+
+    case CAMERA_SDK_SPINNAKER:
+      {
+        assert(NULL == P->pSpinnakerSDK);
+        P->pSpinnakerSDK = AcquisitionParametersSpinnakerCreate(P, P->nFrames, pConnectedCameras);
+        //assert(NULL != P->pSpinnakerSDK);
+        if ( (NULL == P->pSpinnakerSDK) && (true == fallback_to_from_file) )
+          {
+            std::cout << std::endl << gMsgAcquisitionSpinnakerRevertToFromFile << std::endl;
             goto ACQUISITION_THREAD_START_SDK_FROM_FILE;
           }
         /* if */
@@ -3411,6 +3577,7 @@ AcquisitionThreadStart(
   if ( (NULL == P->pFlyCapture2SDK) &&
        (NULL == P->pSaperaSDK) &&
        (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
        (NULL == P->pFromFile)
        )
     {
@@ -3576,9 +3743,21 @@ GetAcquisitionMethod(
   assert(NULL != P);
   if (NULL == P) return CAMERA_SDK_UNKNOWN;
 
-  if ( (NULL != P->pSaperaSDK) &&
-       (NULL == P->pFlyCapture2SDK) &&
+  if ( (NULL != P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
        (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
+       (NULL == P->pFromFile)
+       )
+    {
+      return CAMERA_SDK_FLYCAPTURE2;
+    }
+  /* if */
+
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL != P->pSaperaSDK) &&
+       (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
        (NULL == P->pFromFile)
        )
     {
@@ -3586,19 +3765,10 @@ GetAcquisitionMethod(
     }
   /* if */
 
-  if ( (NULL == P->pSaperaSDK) &&
-       (NULL != P->pFlyCapture2SDK) &&
-       (NULL == P->pPylonSDK) &&
-       (NULL == P->pFromFile)
-       )
-    {
-      return CAMERA_SDK_FLYCAPTURE2;
-    }
-  /* if */
-  
-  if ( (NULL == P->pSaperaSDK) &&
-       (NULL == P->pFlyCapture2SDK) &&
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
        (NULL != P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
        (NULL == P->pFromFile)
        )
     {
@@ -3606,9 +3776,21 @@ GetAcquisitionMethod(
     }
   /* if */
 
-  if ( (NULL == P->pSaperaSDK) &&
-       (NULL == P->pFlyCapture2SDK) &&
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
        (NULL == P->pPylonSDK) &&
+       (NULL != P->pSpinnakerSDK) &&
+       (NULL == P->pFromFile)
+       )
+    {
+      return CAMERA_SDK_SPINNAKER;
+    }
+  /* if */
+
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
+       (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
        (NULL != P->pFromFile)
        )
     {
@@ -3637,30 +3819,21 @@ IsAcquisitionLive(
   assert(NULL != P);
   if (NULL == P) return false;
 
-  if ( (NULL != P->pSaperaSDK) &&
-       (NULL == P->pFlyCapture2SDK) &&
+  if ( (NULL != P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
        (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
        (NULL == P->pFromFile)
        )
     {
       return true;
     }
   /* if */
-
-  if ( (NULL == P->pSaperaSDK) &&
-       (NULL != P->pFlyCapture2SDK) &&
-       (NULL == P->pPylonSDK) &&
-       (NULL == P->pFromFile)
-       )
-    {
-      return true;
-    }
-  /* if */  
-
   
-  if ( (NULL == P->pSaperaSDK) &&
-       (NULL == P->pFlyCapture2SDK) &&
-       (NULL != P->pPylonSDK) &&
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL != P->pSaperaSDK) &&
+       (NULL == P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
        (NULL == P->pFromFile)
        )
     {
@@ -3668,6 +3841,28 @@ IsAcquisitionLive(
     }
   /* if */
 
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
+       (NULL != P->pPylonSDK) &&
+       (NULL == P->pSpinnakerSDK) &&
+       (NULL == P->pFromFile)
+       )
+    {
+      return true;
+    }
+  /* if */
+  
+  if ( (NULL == P->pFlyCapture2SDK) &&
+       (NULL == P->pSaperaSDK) &&
+       (NULL == P->pPylonSDK) &&
+       (NULL != P->pSpinnakerSDK) &&
+       (NULL == P->pFromFile)
+       )
+    {
+      return true;
+    }
+  /* if */
+  
   return false;
 }
 /* IsAcquisitionLive */
@@ -3704,9 +3899,14 @@ GetUniqueCameraIdentifier(
     }
   else if (NULL != P->pPylonSDK)
     {
-    name = AcquisitionParametersPylonGetCameraIdentifier(P->pPylonSDK);
-    assert(NULL != name);
+      name = AcquisitionParametersPylonGetCameraIdentifier(P->pPylonSDK);
+      assert(NULL != name);
     }
+  else if (NULL != P->pSpinnakerSDK)
+    {
+      name = AcquisitionParametersSpinnakerGetCameraIdentifier(P->pSpinnakerSDK);
+      assert(NULL != name);
+    }  
   else if (NULL != P->pFromFile)
     {
       wchar_t const * const directory = AcquisitionParametersFromFileGetDirectory(P->pFromFile);
@@ -3819,7 +4019,7 @@ AcquisitionThreadRescanInputDirectory(
 
   assert(NULL != P->pFromFile);
   if (NULL == P->pFromFile) return false;
-  
+
   assert(NULL != P->pFromFile->pFileList);
   if (NULL == P->pFromFile->pFileList) return false;
 
@@ -3829,12 +4029,12 @@ AcquisitionThreadRescanInputDirectory(
   wchar_t szTitle[sz + 1];
   int const cnt1 = swprintf_s(szTitle, sz, gMsgQueryInputDirectoryForCamera, P->CameraID + 1);
   assert(0 < cnt1);
-  szTitle[sz] = 0; 
+  szTitle[sz] = 0;
 
   bool const rescan = P->pFromFile->pFileList->SetDirectory(P->pFromFile->pFileList->directory_name->c_str(), szTitle);
   assert(true == rescan);
 
-  return rescan;  
+  return rescan;
 }
 /* AcquisitionThreadRescanInputDirectory */
 
@@ -3946,7 +4146,7 @@ AcquisitionThreadSetNewCameraIDAndEncoderID(
   assert( CameraIDOld == P->pImageEncoder->CameraID );
 
   bool set = true;
-  
+
   // Change event IDs.
   {
     P->CameraID = CameraID;
@@ -3993,7 +4193,7 @@ AcquisitionThreadSetNewCameraIDAndEncoderID(
       }
     while (true == encoder_changing);
   }
-  
+
   return set;
 }
 /* AcquisitionThreadSetNewCameraIDAndEncoderID */

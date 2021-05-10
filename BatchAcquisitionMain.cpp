@@ -1451,11 +1451,10 @@ MainSetInitialOutputDirectoryForImageEncoder_inline(
   // Test if supplied image encoder is default (first) one.
   assert(0 == pImageEncoder->EncoderID);
 
-  if (false == savedir) savedir = ImageEncoderTrySetDirectory(pImageEncoder, _T("C:\\3DTS\\Output"));
-  if (false == savedir) savedir = ImageEncoderTrySetDirectory(pImageEncoder, _T("E:\\Output"));
+  if (false == savedir) savedir = ImageEncoderTrySetDirectory(pImageEncoder, _T("C:\\Output"));
   if (false == savedir) savedir = ImageEncoderTrySetDirectory(pImageEncoder, _T("D:\\Output"));
-  if (false == savedir) savedir = ImageEncoderSetDirectory(pImageEncoder, _T("C:\\Users\\Tomislav Petkovic\\Documents\\3DTS\\Capture"), NULL);
-
+  if (false == savedir) savedir = ImageEncoderSetDirectory(pImageEncoder, _T("E:\\Output"), NULL);
+  
   return savedir;
 }
 /* MainSetInitialOutputDirectoryForImageEncoder_inline */
@@ -1989,25 +1988,23 @@ _tmain(
     bool readdir = false;
 
     // First try gamma corrected MPS 20:21:25 pattern.
-    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\3DTS\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18")); 
+    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18")); 
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("E:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("D:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18"));
     
     // Then try gamma corrected MPS 15:19 pattern.
-    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\3DTS\\Input\\1280x800 MPS 15+19 (all), gamma 2.18"));
+    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 MPS 15+19 (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("E:\\Input\\1280x800 MPS 15+19 (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("D:\\Input\\1280x800 MPS 15+19 (all), gamma 2.18"));
 
     // Then try GC+PS gamma corrected pattern.
-    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\3DTS\\Input\\1280x800 GC+PS (all), gamma 2.18"));
+    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 GC+PS (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("E:\\Input\\1280x800 GC+PS (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("D:\\Input\\1280x800 GC+PS (all), gamma 2.18"));
 
     // Finally, try some obsolete patterns.
-    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("E:\\Input\\1280x800 GC+PS (all)"));
-    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\3DTS\\Input\\1280x800 GC+PS (all)"));
-    if (false == readdir) readdir = pImageList->SetDirectory(_T("C:\\Users\\Tomislav Petkovic\\Documents\\3DTS\\StructuredLight3DScanner\\MPS"), NULL);
-
+    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 GC+PS (all)"));
+    
     assert(true == readdir);
     if (true != readdir) return EXIT_FAILURE;
 

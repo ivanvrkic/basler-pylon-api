@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  * 
- * (c) 2015 UniZG, Zagreb. All rights reserved.
- * (c) 2015 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -13,7 +13,7 @@
   \brief  Use this file to include precompiled headers.
 
   \author Tomislav Petkovic
-  \date   2014-12-10
+  \date   2021-04-21
 */
 
 
@@ -82,6 +82,7 @@
 #pragma comment(lib, "xmllite.lib")
 
 
+
 /* Teledyne DALSA Sapera LT SDK */
 #define HAVE_SAPERA_SDK
 #ifdef HAVE_SAPERA_SDK
@@ -104,7 +105,8 @@
 #endif /* HAVE_SAPERA_SDK */
 
 
-/* PointGrey FlyCapture2 SDK */
+
+/* PointGrey/FLIR FlyCapture2 SDK */
 #define HAVE_FLYCAPTURE2_SDK
 #ifdef HAVE_FLYCAPTURE2_SDK
 
@@ -122,98 +124,99 @@
 
 #ifdef DEBUG
 
-#if _MSC_VER == 1700
-// Visual studio 2012, MSVC 11.0
-#pragma comment(lib, "FlyCapture2d_v110.lib")
-#pragma comment(lib, "FlyCapture2GUId_v110.lib")
-#elif _MSC_VER == 1600
-// Visual studio 2010, MSVC 10.0
-#pragma comment(lib, "FlyCapture2d_v100.lib")
-#pragma comment(lib, "FlyCapture2GUId_v100.lib")
-#elif _MSC_VER == 1500
-// Visual studio 2005, MSVC 9.0
-#pragma comment(lib, "FlyCapture2d_v90.lib")
-#pragma comment(lib, "FlyCapture2GUId_v90.lib")
-#else
-#pragma comment(lib, "FlyCapture2d.lib")
-#pragma comment(lib, "FlyCapture2GUId.lib")
-#endif
-
-#else
-
-#if _MSC_VER == 1700
-// Visual studio 2012, MSVC 11.0
-#pragma comment(lib, "FlyCapture2_v110.lib")
-#pragma comment(lib, "FlyCapture2GUI_v110.lib")
-#elif _MSC_VER == 1600
-// Visual studio 2010, MSVC 10.0
 #pragma comment(lib, "FlyCapture2_v100.lib")
 #pragma comment(lib, "FlyCapture2GUI_v100.lib")
-#elif _MSC_VER == 1500
-// Visual studio 2005, MSVC 9.0
-#pragma comment(lib, "FlyCapture2_v90.lib")
-#pragma comment(lib, "FlyCapture2GUId_v90.lib")
+
 #else
-#pragma comment(lib, "FlyCapture2.lib")
-#pragma comment(lib, "FlyCapture2GUI.lib")
-#endif
+
+#pragma comment(lib, "FlyCapture2_v100.lib")
+#pragma comment(lib, "FlyCapture2GUI_v100.lib")
 
 #endif /* DEBUG */
 
 #endif /* HAVE_FLYCAPTURE2_SDK */
 
 
-/* OpenCV 3.0.0-RC1. */
+
+/* Basler Pylon SDK */
+#define HAVE_PYLON_SDK
+#ifdef HAVE_PYLON_SDK
+
+// TODO: Include header here.
+
+// TODO: Include libs here. Note: Will become unnecessary after CMAKE is added.
+
+#endif /* HAVE_PYLON_SDK */
+
+
+
+/* PointGrey/FLIR Spinnaker SDK */
+//#define HAVE_SPINNAKER_SDK
+#ifdef HAVE_SPINNAKER_SDK
+
+// TODO: Include header here.
+
+// TODO: Include libs here. Note: Will become unnecessary after CMAKE is added.
+
+#endif /* HAVE_SPINNAKER_SDK */
+
+
+
+/* OpenCV 4.5.2 */
+
+#if defined(DEBUG) && defined(free)
+#pragma push_macro("free")
+#define OpenCV_C2059_C4003_WORKAROUND
+#undef free
+#endif
+
 #include <opencv2/opencv.hpp>
+
+#ifdef OpenCV_C2059_C4003_WORKAROUND
+#pragma pop_macro("free")
+#endif /* OpenCV_C2059_C4003_WORKAROUND */
+
 
 #ifdef DEBUG
 
-#pragma comment(lib, "opencv_calib3d300d.lib")
-#pragma comment(lib, "opencv_core300d.lib")
-#pragma comment(lib, "opencv_features2d300d.lib")
-#pragma comment(lib, "opencv_flann300d.lib")
-#pragma comment(lib, "opencv_hal300d.lib")
-#pragma comment(lib, "opencv_highgui300d.lib")
-#pragma comment(lib, "opencv_imgcodecs300d.lib")
-#pragma comment(lib, "opencv_imgproc300d.lib")
-#pragma comment(lib, "opencv_ml300d.lib")
-#pragma comment(lib, "opencv_objdetect300d.lib")
-#pragma comment(lib, "opencv_photo300d.lib")
-#pragma comment(lib, "opencv_shape300d.lib")
-#pragma comment(lib, "opencv_stitching300d.lib")
-#pragma comment(lib, "opencv_superres300d.lib")
-#pragma comment(lib, "opencv_ts300d.lib")
-#pragma comment(lib, "opencv_video300d.lib")
-#pragma comment(lib, "opencv_videoio300d.lib")
-#pragma comment(lib, "opencv_videostab300d.lib")
+#pragma comment(lib, "opencv_calib3d452d.lib")
+#pragma comment(lib, "opencv_core452d.lib")
+#pragma comment(lib, "opencv_features2d452d.lib")
+#pragma comment(lib, "opencv_flann452d.lib")
+#pragma comment(lib, "opencv_gapi452d.lib")
+#pragma comment(lib, "opencv_highgui452d.lib")
+#pragma comment(lib, "opencv_imgcodecs452d.lib")
+#pragma comment(lib, "opencv_imgproc452d.lib")
+#pragma comment(lib, "opencv_ml452d.lib")
+#pragma comment(lib, "opencv_objdetect452d.lib")
+#pragma comment(lib, "opencv_photo452d.lib")
+#pragma comment(lib, "opencv_stitching452d.lib")
+#pragma comment(lib, "opencv_video452d.lib")
+#pragma comment(lib, "opencv_videoio452d.lib")
 
 #else
 
-#pragma comment(lib, "opencv_calib3d300.lib")
-#pragma comment(lib, "opencv_core300.lib")
-#pragma comment(lib, "opencv_features2d300.lib")
-#pragma comment(lib, "opencv_flann300.lib")
-#pragma comment(lib, "opencv_hal300.lib")
-#pragma comment(lib, "opencv_highgui300.lib")
-#pragma comment(lib, "opencv_imgcodecs300.lib")
-#pragma comment(lib, "opencv_imgproc300.lib")
-#pragma comment(lib, "opencv_ml300.lib")
-#pragma comment(lib, "opencv_objdetect300.lib")
-#pragma comment(lib, "opencv_photo300.lib")
-#pragma comment(lib, "opencv_shape300.lib")
-#pragma comment(lib, "opencv_stitching300.lib")
-#pragma comment(lib, "opencv_superres300.lib")
-#pragma comment(lib, "opencv_ts300.lib")
-#pragma comment(lib, "opencv_video300.lib")
-#pragma comment(lib, "opencv_videoio300.lib")
-#pragma comment(lib, "opencv_videostab300.lib")
+#pragma comment(lib, "opencv_calib3d452.lib")
+#pragma comment(lib, "opencv_core452.lib")
+#pragma comment(lib, "opencv_features2d452.lib")
+#pragma comment(lib, "opencv_flann452.lib")
+#pragma comment(lib, "opencv_gapi452.lib")
+#pragma comment(lib, "opencv_highgui452.lib")
+#pragma comment(lib, "opencv_imgcodecs452.lib")
+#pragma comment(lib, "opencv_imgproc452.lib")
+#pragma comment(lib, "opencv_ml452.lib")
+#pragma comment(lib, "opencv_objdetect452.lib")
+#pragma comment(lib, "opencv_photo452.lib")
+#pragma comment(lib, "opencv_stitching452.lib")
+#pragma comment(lib, "opencv_video452.lib")
+#pragma comment(lib, "opencv_videoio452.lib")
 
 #endif /* _DEBUG */
 
 
-/* VTK 6.2.0 */
+/* VTK 9.0 */
 #include <vtkAutoInit.h>
-VTK_MODULE_INIT(vtkRenderingOpenGL);
+VTK_MODULE_INIT(vtkRenderingOpenGL2);
 VTK_MODULE_INIT(vtkInteractionStyle);
 VTK_MODULE_INIT(vtkRenderingFreeType);
 
@@ -272,83 +275,82 @@ VTK_MODULE_INIT(vtkRenderingFreeType);
 #include <vtkOBJExporter.h>
 #include <vtkSTLWriter.h>
 
-#pragma comment(lib, "vtkCommonColor-6.2.lib")
-#pragma comment(lib, "vtkCommonComputationalGeometry-6.2.lib")
-#pragma comment(lib, "vtkCommonCore-6.2.lib")
-#pragma comment(lib, "vtkCommonDataModel-6.2.lib")
-#pragma comment(lib, "vtkCommonExecutionModel-6.2.lib")
-#pragma comment(lib, "vtkCommonMath-6.2.lib")
-#pragma comment(lib, "vtkCommonMisc-6.2.lib")
-#pragma comment(lib, "vtkCommonSystem-6.2.lib")
-#pragma comment(lib, "vtkCommonTransforms-6.2.lib")
-#pragma comment(lib, "vtkFiltersAMR-6.2.lib")
-#pragma comment(lib, "vtkFiltersCore-6.2.lib")
-#pragma comment(lib, "vtkFiltersExtraction-6.2.lib")
-#pragma comment(lib, "vtkFiltersFlowPaths-6.2.lib")
-#pragma comment(lib, "vtkFiltersGeneral-6.2.lib")
-#pragma comment(lib, "vtkFiltersGeneric-6.2.lib")
-#pragma comment(lib, "vtkFiltersGeometry-6.2.lib")
-#pragma comment(lib, "vtkFiltersHybrid-6.2.lib")
-#pragma comment(lib, "vtkFiltersHyperTree-6.2.lib")
-#pragma comment(lib, "vtkFiltersImaging-6.2.lib")
-#pragma comment(lib, "vtkFiltersModeling-6.2.lib")
-#pragma comment(lib, "vtkFiltersParallel-6.2.lib")
-#pragma comment(lib, "vtkFiltersParallelImaging-6.2.lib")
-#pragma comment(lib, "vtkFiltersSelection-6.2.lib")
-#pragma comment(lib, "vtkFiltersSMP-6.2.lib")
-#pragma comment(lib, "vtkFiltersSources-6.2.lib")
-#pragma comment(lib, "vtkFiltersStatistics-6.2.lib")
-#pragma comment(lib, "vtkFiltersTexture-6.2.lib")
-#pragma comment(lib, "vtkFiltersVerdict-6.2.lib")
-#pragma comment(lib, "vtkImagingColor-6.2.lib")
-#pragma comment(lib, "vtkImagingCore-6.2.lib")
-#pragma comment(lib, "vtkImagingFourier-6.2.lib")
-#pragma comment(lib, "vtkImagingGeneral-6.2.lib")
-#pragma comment(lib, "vtkImagingHybrid-6.2.lib")
-#pragma comment(lib, "vtkImagingMath-6.2.lib")
-#pragma comment(lib, "vtkImagingMorphological-6.2.lib")
-#pragma comment(lib, "vtkImagingSources-6.2.lib")
-#pragma comment(lib, "vtkImagingStatistics-6.2.lib")
-#pragma comment(lib, "vtkImagingStencil-6.2.lib")
-#pragma comment(lib, "vtkInteractionImage-6.2.lib")
-#pragma comment(lib, "vtkInteractionStyle-6.2.lib")
-#pragma comment(lib, "vtkInteractionWidgets-6.2.lib")
-#pragma comment(lib, "vtkIOAMR-6.2.lib")
-#pragma comment(lib, "vtkIOCore-6.2.lib")
-#pragma comment(lib, "vtkIOEnSight-6.2.lib")
-#pragma comment(lib, "vtkIOExodus-6.2.lib")
-#pragma comment(lib, "vtkIOExport-6.2.lib")
-#pragma comment(lib, "vtkIOGeometry-6.2.lib")
-#pragma comment(lib, "vtkIOImage-6.2.lib")
-#pragma comment(lib, "vtkIOImport-6.2.lib")
-#pragma comment(lib, "vtkIOInfovis-6.2.lib")
-#pragma comment(lib, "vtkIOLegacy-6.2.lib")
-#pragma comment(lib, "vtkIOLSDyna-6.2.lib")
-#pragma comment(lib, "vtkIOMINC-6.2.lib")
-#pragma comment(lib, "vtkIOMovie-6.2.lib")
-#pragma comment(lib, "vtkIONetCDF-6.2.lib")
-#pragma comment(lib, "vtkIOParallel-6.2.lib")
-#pragma comment(lib, "vtkIOParallelXML-6.2.lib")
-#pragma comment(lib, "vtkIOPLY-6.2.lib")
-#pragma comment(lib, "vtkIOSQL-6.2.lib")
-#pragma comment(lib, "vtkIOVideo-6.2.lib")
-#pragma comment(lib, "vtkIOXML-6.2.lib")
-#pragma comment(lib, "vtkIOXMLParser-6.2.lib")
-#pragma comment(lib, "vtkParallelCore-6.2.lib")
-#pragma comment(lib, "vtkRenderingAnnotation-6.2.lib")
-#pragma comment(lib, "vtkRenderingContext2D-6.2.lib")
-#pragma comment(lib, "vtkRenderingContextOpenGL-6.2.lib")
-#pragma comment(lib, "vtkRenderingCore-6.2.lib")
-#pragma comment(lib, "vtkRenderingFreeType-6.2.lib")
-#pragma comment(lib, "vtkRenderingFreeTypeOpenGL-6.2.lib")
-#pragma comment(lib, "vtkRenderingGL2PS-6.2.lib")
-#pragma comment(lib, "vtkRenderingImage-6.2.lib")
-#pragma comment(lib, "vtkRenderingLabel-6.2.lib")
-#pragma comment(lib, "vtkRenderingLIC-6.2.lib")
-#pragma comment(lib, "vtkRenderingLOD-6.2.lib")
-#pragma comment(lib, "vtkRenderingOpenGL-6.2.lib")
-#pragma comment(lib, "vtkRenderingVolume-6.2.lib")
-#pragma comment(lib, "vtkRenderingVolumeOpenGL-6.2.lib")
+#pragma comment(lib, "vtkCommonColor-9.0.lib")
+#pragma comment(lib, "vtkCommonComputationalGeometry-9.0.lib")
+#pragma comment(lib, "vtkCommonCore-9.0.lib")
+#pragma comment(lib, "vtkCommonDataModel-9.0.lib")
+#pragma comment(lib, "vtkCommonExecutionModel-9.0.lib")
+#pragma comment(lib, "vtkCommonMath-9.0.lib")
+#pragma comment(lib, "vtkCommonMisc-9.0.lib")
+#pragma comment(lib, "vtkCommonSystem-9.0.lib")
+#pragma comment(lib, "vtkCommonTransforms-9.0.lib")
+#pragma comment(lib, "vtkFiltersAMR-9.0.lib")
+#pragma comment(lib, "vtkFiltersCore-9.0.lib")
+#pragma comment(lib, "vtkFiltersExtraction-9.0.lib")
+#pragma comment(lib, "vtkFiltersFlowPaths-9.0.lib")
+#pragma comment(lib, "vtkFiltersGeneral-9.0.lib")
+#pragma comment(lib, "vtkFiltersGeneric-9.0.lib")
+#pragma comment(lib, "vtkFiltersGeometry-9.0.lib")
+#pragma comment(lib, "vtkFiltersHybrid-9.0.lib")
+#pragma comment(lib, "vtkFiltersHyperTree-9.0.lib")
+#pragma comment(lib, "vtkFiltersImaging-9.0.lib")
+#pragma comment(lib, "vtkFiltersModeling-9.0.lib")
+#pragma comment(lib, "vtkFiltersParallel-9.0.lib")
+#pragma comment(lib, "vtkFiltersParallelImaging-9.0.lib")
+#pragma comment(lib, "vtkFiltersSelection-9.0.lib")
+#pragma comment(lib, "vtkFiltersSMP-9.0.lib")
+#pragma comment(lib, "vtkFiltersSources-9.0.lib")
+#pragma comment(lib, "vtkFiltersStatistics-9.0.lib")
+#pragma comment(lib, "vtkFiltersTexture-9.0.lib")
+#pragma comment(lib, "vtkFiltersVerdict-9.0.lib")
+#pragma comment(lib, "vtkImagingColor-9.0.lib")
+#pragma comment(lib, "vtkImagingCore-9.0.lib")
+#pragma comment(lib, "vtkImagingFourier-9.0.lib")
+#pragma comment(lib, "vtkImagingGeneral-9.0.lib")
+#pragma comment(lib, "vtkImagingHybrid-9.0.lib")
+#pragma comment(lib, "vtkImagingMath-9.0.lib")
+#pragma comment(lib, "vtkImagingMorphological-9.0.lib")
+#pragma comment(lib, "vtkImagingSources-9.0.lib")
+#pragma comment(lib, "vtkImagingStatistics-9.0.lib")
+#pragma comment(lib, "vtkImagingStencil-9.0.lib")
+#pragma comment(lib, "vtkInteractionImage-9.0.lib")
+#pragma comment(lib, "vtkInteractionStyle-9.0.lib")
+#pragma comment(lib, "vtkInteractionWidgets-9.0.lib")
+#pragma comment(lib, "vtkIOAMR-9.0.lib")
+#pragma comment(lib, "vtkIOCore-9.0.lib")
+#pragma comment(lib, "vtkIOEnSight-9.0.lib")
+#pragma comment(lib, "vtkIOExodus-9.0.lib")
+#pragma comment(lib, "vtkIOExport-9.0.lib")
+#pragma comment(lib, "vtkIOGeometry-9.0.lib")
+#pragma comment(lib, "vtkIOImage-9.0.lib")
+#pragma comment(lib, "vtkIOImport-9.0.lib")
+#pragma comment(lib, "vtkIOInfovis-9.0.lib")
+#pragma comment(lib, "vtkIOLegacy-9.0.lib")
+#pragma comment(lib, "vtkIOLSDyna-9.0.lib")
+#pragma comment(lib, "vtkIOMINC-9.0.lib")
+#pragma comment(lib, "vtkIOMovie-9.0.lib")
+#pragma comment(lib, "vtkIONetCDF-9.0.lib")
+#pragma comment(lib, "vtkIOParallel-9.0.lib")
+#pragma comment(lib, "vtkIOParallelXML-9.0.lib")
+#pragma comment(lib, "vtkIOPLY-9.0.lib")
+#pragma comment(lib, "vtkIOSQL-9.0.lib")
+#pragma comment(lib, "vtkIOVideo-9.0.lib")
+#pragma comment(lib, "vtkIOXML-9.0.lib")
+#pragma comment(lib, "vtkIOXMLParser-9.0.lib")
+#pragma comment(lib, "vtkParallelCore-9.0.lib")
+#pragma comment(lib, "vtkRenderingAnnotation-9.0.lib")
+#pragma comment(lib, "vtkRenderingContext2D-9.0.lib")
+#pragma comment(lib, "vtkRenderingCore-9.0.lib")
+#pragma comment(lib, "vtkRenderingFreeType-9.0.lib")
+#pragma comment(lib, "vtkRenderingGL2PSOpenGL2-9.0.lib")
+#pragma comment(lib, "vtkRenderingImage-9.0.lib")
+#pragma comment(lib, "vtkRenderingLabel-9.0.lib")
+#pragma comment(lib, "vtkRenderingLOD-9.0.lib")
+#pragma comment(lib, "vtkRenderingOpenGL2-9.0.lib")
+#pragma comment(lib, "vtkRenderingSceneGraph-9.0.lib")
+#pragma comment(lib, "vtkRenderingUI-9.0.lib")
+#pragma comment(lib, "vtkRenderingVolume-9.0.lib")
+#pragma comment(lib, "vtkRenderingVolumeOpenGL2-9.0.lib")
 
 
 

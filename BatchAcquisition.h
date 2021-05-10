@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2016 UniZG, Zagreb. All rights reserved.
- * (c) 2016 FER, Zagreb. All rights reserved.
+ * (c) 2016-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2016-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -13,7 +13,7 @@
   \brief  Main include header.
 
   \author Tomislav Petkovic
-  \date   2016-04-05
+  \date   2021-04-20
 */
 
 
@@ -122,6 +122,8 @@ enum CameraSDK_
     CAMERA_SDK_FLYCAPTURE2, /*!< PointGrey FlyCapture2 SDK. */
     CAMERA_SDK_SAPERA, /*!< Teledyne Dalsa Sapera SDK. */
     CAMERA_SDK_FROM_FILE, /*!< Dummy acquisition from file. */
+    CAMERA_SDK_PYLON, /*!< Basler Pylon SDK. */
+    CAMERA_SDK_SPINNAKER, /*!< Flir Spinnaker SDK. */
     CAMERA_SDK_UNKNOWN /*!< Unknown camera SDK. */
   } CameraSDK;
 
@@ -897,9 +899,9 @@ set_ptr_inline(
 /****** NaN AND Inf ******/
 
 /* We define two constants that can be used as double values for NaN. */
-static __int32 const BATCHACQUISITION_sNaN_d[2] = {0xffffffff, 0xfff7ffff}; //!< Double precision signaling NaN bitvalues.
-static __int32 const BATCHACQUISITION_qNaN_d[2] = {0xffffffff, 0xffffffff}; //!< Double quiet signaling NaN bitvalues.
-static __int32 const BATCHACQUISITION__IND_d[2] = {0x00000000, 0xfff80000}; //!< Double precision IND bitvalues.
+static unsigned __int32 const BATCHACQUISITION_sNaN_d[2] = {0xffffffff, 0xfff7ffff}; //!< Double precision signaling NaN bitvalues.
+static unsigned __int32 const BATCHACQUISITION_qNaN_d[2] = {0xffffffff, 0xffffffff}; //!< Double quiet signaling NaN bitvalues.
+static unsigned __int32 const BATCHACQUISITION__IND_d[2] = {0x00000000, 0xfff80000}; //!< Double precision IND bitvalues.
 
 double const BATCHACQUISITION_sNaN_dv = *( (double *)BATCHACQUISITION_sNaN_d ); //!< Double precision signaling NaN.
 double const BATCHACQUISITION_qNaN_dv = *( (double *)BATCHACQUISITION_qNaN_d ); //!< Double quiet signaling NaN.
@@ -907,9 +909,9 @@ double const BATCHACQUISITION__IND_dv = *( (double *)BATCHACQUISITION__IND_d ); 
 
 
 /* We also define two constants that can be used as float values for NaN. */
-static __int32 const BATCHACQUISITION_sNaN_f[1] = {0xffbfffff}; //!< Single precision signaling NaN bitvalues.
-static __int32 const BATCHACQUISITION_qNaN_f[1] = {0xffffffff}; //!< Single quiet signaling NaN bitvalues.
-static __int32 const BATCHACQUISITION__IND_f[1] = {0x7ffc0000}; //!< Single precision IND bitvalues.
+static unsigned __int32 const BATCHACQUISITION_sNaN_f[1] = {0xffbfffff}; //!< Single precision signaling NaN bitvalues.
+static unsigned __int32 const BATCHACQUISITION_qNaN_f[1] = {0xffffffff}; //!< Single quiet signaling NaN bitvalues.
+static unsigned __int32 const BATCHACQUISITION__IND_f[1] = {0x7ffc0000}; //!< Single precision IND bitvalues.
 
 float const BATCHACQUISITION_sNaN_fv = *( (float *)BATCHACQUISITION_sNaN_f ); //!< Single precision signaling NaN.
 float const BATCHACQUISITION_qNaN_fv = *( (float *)BATCHACQUISITION_qNaN_f ); //!< Single quiet signaling NaN.
@@ -917,11 +919,11 @@ float const BATCHACQUISITION__IND_fv = *( (float *)BATCHACQUISITION__IND_f ); //
 
 
 /* We also have plus and minus infinity. */
-static __int32 const BATCHACQUISITION_pINF_d[2] = {0x00000000, 0x7ff00000}; //!< Double precision positive infinity bitvalues.
-static __int32 const BATCHACQUISITION_nINF_d[2] = {0x00000000, 0xfff00000}; //!< Double precision negative infinity bitvalues.
+static unsigned __int32 const BATCHACQUISITION_pINF_d[2] = {0x00000000, 0x7ff00000}; //!< Double precision positive infinity bitvalues.
+static unsigned __int32 const BATCHACQUISITION_nINF_d[2] = {0x00000000, 0xfff00000}; //!< Double precision negative infinity bitvalues.
 
-static __int32 const BATCHACQUISITION_pINF_f[1] = {0x7f800000}; //!< Single precision positive infinity bitvalues.
-static __int32 const BATCHACQUISITION_nINF_f[1] = {0xff800000}; //!< Single precision negative infinity bitvalues.
+static unsigned __int32 const BATCHACQUISITION_pINF_f[1] = {0x7f800000}; //!< Single precision positive infinity bitvalues.
+static unsigned __int32 const BATCHACQUISITION_nINF_f[1] = {0xff800000}; //!< Single precision negative infinity bitvalues.
 
 double const BATCHACQUISITION_pINF_dv = *( (double *)BATCHACQUISITION_pINF_d ); //!< Double precision positive infinity.
 double const BATCHACQUISITION_nINF_dv = *( (double *)BATCHACQUISITION_nINF_d ); //!< Double precision negative infinity.

@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015-2017 UniZG, Zagreb. All rights reserved.
- * (c) 2015-2017 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -18,7 +18,7 @@
   it may be pushed into the visualisation thread for display.
 
   \author Tomislav Petkovic
-  \date   2017-05-15
+  \date   2021-04-20
 */
 
 
@@ -2695,9 +2695,9 @@ VTKSavePointCloudToPLY_inline(
     }
   /* if */
 
-  std::vector<cv::Mat * const> points_all;
-  std::vector<cv::Mat * const> colors_all;
-  std::vector<cv::Mat * const> normals_all;
+  std::vector<cv::Mat *> points_all;
+  std::vector<cv::Mat *> colors_all;
+  std::vector<cv::Mat *> normals_all;
 
   points_all.push_back(points);
   colors_all.push_back(colors);
@@ -2778,9 +2778,9 @@ VTKSavePointCloudsToPLY_inline(
   assert( SUCCEEDED(hr) || (0x800704C7 == hr) );
   if ( !SUCCEEDED(hr) ) return;
 
-  std::vector<cv::Mat * const> points_all;
-  std::vector<cv::Mat * const> colors_all;
-  std::vector<cv::Mat * const> normals_all;   
+  std::vector<cv::Mat *> points_all;
+  std::vector<cv::Mat *> colors_all;
+  std::vector<cv::Mat *> normals_all;   
 
   points_all.reserve(n);
   colors_all.reserve(n);
@@ -3854,8 +3854,8 @@ VTKCreatePointCloudData(
               clr[0] = rowptr[0];
               clr[1] = rowptr[1];
               clr[2] = rowptr[2];
-              P->ColorsOriginal->SetTupleValue(i, clr);
-              P->ColorsMapped->SetTupleValue(i, clr);
+              P->ColorsOriginal->SetTypedTuple(i, clr);
+              P->ColorsMapped->SetTypedTuple(i, clr);
             }
           /* for */
         }
@@ -3869,8 +3869,8 @@ VTKCreatePointCloudData(
               clr[0] = rowptr[0];
               clr[1] = rowptr[0];
               clr[2] = rowptr[0];
-              P->ColorsOriginal->SetTupleValue(i, clr);
-              P->ColorsMapped->SetTupleValue(i, clr);
+              P->ColorsOriginal->SetTypedTuple(i, clr);
+              P->ColorsMapped->SetTypedTuple(i, clr);
             }
           /* for */
         }
@@ -3885,8 +3885,8 @@ VTKCreatePointCloudData(
           };
           for (int i = 0; i < N; ++i)
             {
-              P->ColorsOriginal->SetTupleValue(i, clr);
-              P->ColorsMapped->SetTupleValue(i, clr);
+              P->ColorsOriginal->SetTypedTuple(i, clr);
+              P->ColorsMapped->SetTypedTuple(i, clr);
             }
           /* for */
         }
@@ -3901,8 +3901,8 @@ VTKCreatePointCloudData(
           };
           for (int i = 0; i < N; ++i)
             {
-              P->ColorsOriginal->SetTupleValue(i, clr);
-              P->ColorsMapped->SetTupleValue(i, clr);
+              P->ColorsOriginal->SetTypedTuple(i, clr);
+              P->ColorsMapped->SetTypedTuple(i, clr);
             }
           /* for */
         }
@@ -3911,8 +3911,8 @@ VTKCreatePointCloudData(
           // Unsupported input.
           for (int i = 0; i < N; ++i)
             {
-              P->ColorsOriginal->SetTupleValue(i, default_color);
-              P->ColorsMapped->SetTupleValue(i, default_color);
+              P->ColorsOriginal->SetTypedTuple(i, default_color);
+              P->ColorsMapped->SetTypedTuple(i, default_color);
             }
           /* for */
         }
@@ -3922,8 +3922,8 @@ VTKCreatePointCloudData(
     {
       for (int i = 0; i < N; ++i)
         {
-          P->ColorsOriginal->SetTupleValue(i, default_color);
-          P->ColorsMapped->SetTupleValue(i, default_color);
+          P->ColorsOriginal->SetTypedTuple(i, default_color);
+          P->ColorsMapped->SetTypedTuple(i, default_color);
         }
       /* for */
     }
@@ -5122,6 +5122,12 @@ AlignedLineRepresentation::StretchLineToCoverViewport(
       p2[0] = pt[0];
       p2[1] = pt[1];
       p2[2] = pt[2];
+    }
+  else if ( (0 == vx) && (0 == vy) && (0 == length) )
+    {
+      // There is no bounding box.
+      p1[0] = 0; p1[1] = 0; p1[2] = 0;
+      p2[0] = 0; p2[1] = 0; p2[2] = 0;
     }
   else
     {

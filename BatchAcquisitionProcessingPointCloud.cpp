@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2016 UniZG, Zagreb. All rights reserved.
- * (c) 2016 FER, Zagreb. All rights reserved.
+ * (c) 2016-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2016-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -15,7 +15,7 @@
   Functions for point cloud processing.
 
   \author Tomislav Petkovic
-  \date   2019-07-05
+  \date   2021-04-20
 */
 
 #include "BatchAcquisitionStdAfx.h"
@@ -235,7 +235,7 @@ PointCloudWeiszfeld(
           points->copyTo(tmp1);
           for (int i = 0; i < D; ++i) tmp1.col(i) = tmp1.col(i) - md.at<double>(0, i);
           pow(tmp1, 2, tmp2);
-          reduce(tmp2, tmp1, 1, CV_REDUCE_SUM);
+          reduce(tmp2, tmp1, 1, cv::REDUCE_SUM);
           cv::sqrt(tmp1, distances);
 
           // Invert Euclidean distances.
@@ -247,12 +247,12 @@ PointCloudWeiszfeld(
           // Compute denominator.
           tmp1 = cv::Mat::zeros(1, 1, CV_64F);
           distances_inv.copyTo(tmp1, mask);
-          reduce(tmp1, den, 0, CV_REDUCE_SUM);
+          reduce(tmp1, den, 0, cv::REDUCE_SUM);
 
           // Compute numerator.
           points->copyTo(tmp2);
           for (int i = 0; i < D; ++i) tmp2.col(i) = tmp2.col(i).mul( tmp1.col(0) );
-          reduce(tmp2, num, 0, CV_REDUCE_SUM);
+          reduce(tmp2, num, 0, cv::REDUCE_SUM);
         }
       /* if */
 
@@ -272,7 +272,7 @@ PointCloudWeiszfeld(
       else
         {
           pow(dst, 2, tmp1);
-          reduce(tmp1, tmp2, 1, CV_REDUCE_SUM);
+          reduce(tmp1, tmp2, 1, cv::REDUCE_SUM);
           cv::sqrt(tmp2, tmp1);
           converged = (niter > niter_stop) || (tmp1.at<double>(0,0) < dst_stop);
         }
@@ -479,9 +479,9 @@ PointCloudInFrontOfAPlane(
 bool
 PointCloudSaveToPLY(
                     wchar_t const * const filename,
-                    std::vector<cv::Mat * const> & points,
-                    std::vector<cv::Mat * const> & colors,
-                    std::vector<cv::Mat * const> & normals
+                    std::vector<cv::Mat *> & points,
+                    std::vector<cv::Mat *> & colors,
+                    std::vector<cv::Mat *> & normals
                     )
 {
   bool saved = false;

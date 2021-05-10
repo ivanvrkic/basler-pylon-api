@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2016 UniZG, Zagreb. All rights reserved.
- * (c) 2016 FER, Zagreb. All rights reserved.
+ * (c) 2016-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2016-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -15,7 +15,7 @@
   Functions for point cloud processing.
 
   \author Tomislav Petkovic
-  \date   2016-07-04
+  \date   2021-04-20
 */
 
 
@@ -41,9 +41,9 @@ int PointCloudInFrontOfAPlane(cv::Mat * const, double const, double const, doubl
 //! Save point cloud to PLY.
 bool PointCloudSaveToPLY(
                          wchar_t const * const,
-                         std::vector<cv::Mat * const> &,
-                         std::vector<cv::Mat * const> &,
-                         std::vector<cv::Mat * const> &
+                         std::vector<cv::Mat *> &,
+                         std::vector<cv::Mat *> &,
+                         std::vector<cv::Mat *> &
                          );
 
 
