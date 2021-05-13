@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015 UniZG, Zagreb. All rights reserved.
- * (c) 2015 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -16,7 +16,7 @@
   and a combination of Gray code and phase shifting.
 
   \author Tomislav Petkovic, Tomislav Pribanic
-  \date   2015-05-28
+  \date   2021-04-20
 */
 
 
@@ -172,14 +172,6 @@ mps_unwrap_phase(
                  cv::Mat * * const,
                  cv::Mat * * const
                  );
-
-
-
-//computes the possible period combinations for given number of pattrens' periods
-void mpslut1(CvMat* &komall, CvMat* &nkom, const int p1, const int p2, const int p3=0, const int p4=0);
-
-//computes the absolute (unwrapped) phase using MPS (robust version) approach
-CvMat*  absphs1(CvMat *FI1, CvMat *FI2, CvMat* komall, CvMat* nkom, const int p1, const int p2);
 
 
 /****** PHASE STATISTICS ON SLIDING WINDOW ******/

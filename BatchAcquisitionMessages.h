@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2017 UniZG, Zagreb. All rights reserved.
- * (c) 2017 FER, Zagreb. All rights reserved.
+ * (c) 2017-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2017-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -15,7 +15,7 @@
   This file contains strings for all messages that are output to the user.
 
   \author Tomislav Petkovic
-  \date   2017-02-02
+  \date   2021-05-10
 */
 
 
@@ -792,6 +792,12 @@ static const char gMsgAcquisitionFlyCap2RevertToFromFile[] =
 
 static const char gMsgAcquisitionSaperaLTRevertToFromFile[] =
   "Initialization of SaperaLT SDK failed. Reverting to acquisition from file(s).";
+
+static const char gMsgAcquisitionPylonRevertToFromFile[] =
+  "Initialization of Pylon SDK failed. Reverting to acquisition from file(s).";
+
+static const char gMsgAcquisitionSpinnakerRevertToFromFile[] =
+  "Initialization of Spinnaker SDK failed. Reverting to acquisition from file(s).";
 
 static const char dDbgTriggerDropKnownMetadata[] =
   "[CAM %d] Dropping trigger for frame %d in %s:%d.\n";

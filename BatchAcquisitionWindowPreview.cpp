@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015-2017 UniZG, Zagreb. All rights reserved.
- * (c) 2015-2017 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -15,7 +15,7 @@
   Functions to create live preview window for the camera.
 
   \author Tomislav Petkovic
-  \date   2017-02-28
+  \date   2021-04-21
 */
 
 
@@ -546,14 +546,14 @@ DecodePushedImage_inline(
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
           msrc.convertTo(*(ptr->pImageTMP), CV_8U, 256.0); // Saturate data.
-          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
       case IDT_8U_GRAY:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -569,7 +569,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -585,7 +585,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -601,7 +601,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -617,7 +617,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -633,7 +633,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -641,7 +641,7 @@ DecodePushedImage_inline(
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8SC1, (void *)(ptr->pData), (int)(ptr->data_stride));
           msrc.convertTo(*(ptr->pImageTMP), CV_8UC1, 1.0, 128.0); // Affine scale to 8U; zero maps to 128.
-          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -649,7 +649,7 @@ DecodePushedImage_inline(
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_16SC1, (void *)(ptr->pData), (int)(ptr->data_stride));
           msrc.convertTo(*(ptr->pImageTMP), CV_8UC1, 1.0/256.0, 128.0);
-          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -661,7 +661,7 @@ DecodePushedImage_inline(
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_16SC1, (void *)(ptr->pData), (int)(ptr->data_stride));
           msrc.convertTo(*(ptr->pImageTMP), CV_8UC1, 1.0/256.0, 128.0);
-          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(*(ptr->pImageTMP), *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
@@ -669,39 +669,35 @@ DecodePushedImage_inline(
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_32SC1, (void *)(ptr->pData), (int)(ptr->data_stride));
           msrc.convertTo(*(ptr->pImageTMP), CV_8UC1, 1.0/16777216.0, 128.0);
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_GRAY2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_GRAY2BGRA);
         }
         break;
 
       case IDT_8U_BayerGR:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGB2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGB2BGRA);
         }
         break;
 
       case IDT_8U_BayerRG:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerBG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerBG2BGRA);
         }
         break;
 
       case IDT_8U_BayerGB:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGR2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGR2BGRA);
         }
         break;
 
       case IDT_8U_BayerBG:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerRG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerRG2BGRA);
         }
         break;
 
@@ -717,8 +713,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGB2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGB2BGRA);
         }
         break;
 
@@ -734,8 +729,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerBG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerBG2BGRA);
         }
         break;
 
@@ -751,8 +745,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGR2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGR2BGRA);
         }
         break;
 
@@ -768,8 +761,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerRG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerRG2BGRA);
         }
         break;
 
@@ -786,8 +778,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGB2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGB2BGRA);
         }
         break;
 
@@ -803,8 +794,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerBG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerBG2BGRA);
         }
         break;
 
@@ -820,8 +810,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGR2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGR2BGRA);
         }
         break;
 
@@ -837,8 +826,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerRG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerRG2BGRA);
         }
         break;
 
@@ -854,8 +842,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGB2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGB2BGRA);
         }
         break;
 
@@ -871,8 +858,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerBG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerBG2BGRA);
         }
         break;
 
@@ -888,8 +874,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGR2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGR2BGRA);
         }
         break;
 
@@ -905,8 +890,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerRG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerRG2BGRA);
         }
         break;
 
@@ -922,8 +906,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGB2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGB2BGRA);
         }
         break;
 
@@ -939,8 +922,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerBG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerBG2BGRA);
         }
         break;
 
@@ -956,8 +938,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerGR2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerGR2BGRA);
         }
         break;
 
@@ -973,29 +954,28 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC1, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_BayerRG2BGR);
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BayerRG2BGRA);
         }
         break;
 
       case IDT_8U_RGB:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC3, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_RGB2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_RGB2BGRA);
         }
         break;
 
       case IDT_8U_RGBA:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC4, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_RGBA2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_RGBA2BGRA);
         }
         break;
 
       case IDT_8U_BGR:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC3, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
 
@@ -1011,7 +991,7 @@ DecodePushedImage_inline(
           /* if */
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC3, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
 
@@ -1029,14 +1009,14 @@ DecodePushedImage_inline(
           HRESULT const hr = ConvertYUV411ToBGR8(ptr->data_width, ptr->data_height, ptr->data_stride, ptr->pData, (unsigned int)(ptr->pImageBGR->step[0]), ptr->pImageBGR->data);
           assert( SUCCEEDED(hr) );
 
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
 
       case IDT_8U_YUV422:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC2, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGRA), CV_YUV2BGRA_UYVY);
+          cv::cvtColor(msrc, *(ptr->pImageBGRA), cv::COLOR_YUV2BGRA_UYVY);
         }
         break;
 
@@ -1047,7 +1027,7 @@ DecodePushedImage_inline(
           HRESULT const hr = ConvertYUV422BT601ToBGR8(ptr->data_width, ptr->data_height, ptr->data_stride, ptr->pData, (unsigned int)(ptr->pImageBGR->step[0]), ptr->pImageBGR->data);
           assert( SUCCEEDED(hr) );
 
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
 
@@ -1058,15 +1038,15 @@ DecodePushedImage_inline(
           HRESULT const hr = ConvertYUV422BT709ToBGR8(ptr->data_width, ptr->data_height, ptr->data_stride, ptr->pData, (unsigned int)(ptr->pImageBGR->step[0]), ptr->pImageBGR->data);
           assert( SUCCEEDED(hr) );
 
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
 
       case IDT_8U_YUV444:
         {
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC3, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGR), cv::COLOR_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
+          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
 
@@ -1077,8 +1057,8 @@ DecodePushedImage_inline(
           if ( SUCCEEDED(hr) ) ptr->data_type = IDT_8U_YUV444;
 
           cv::Mat msrc((int)(ptr->data_height), (int)(ptr->data_width), CV_8UC3, (void *)(ptr->pData), (int)(ptr->data_stride));
-          cv::cvtColor(msrc, *(ptr->pImageBGR), CV_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
-          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), CV_BGR2BGRA);
+          cv::cvtColor(msrc, *(ptr->pImageBGR), cv::COLOR_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
+          cv::cvtColor(*(ptr->pImageBGR), *(ptr->pImageBGRA), cv::COLOR_BGR2BGRA);
         }
         break;
       }
@@ -1678,10 +1658,20 @@ RecreateDirectXDeviceAndSwapChain(
 
         /* Update scaling factors. */
         {
-          FLOAT dpiX = 0.0f;  FLOAT dpiY = 0.0f;
-          ptr->pD2DFactory->GetDesktopDpi(&dpiX, &dpiY);
-          ptr->scaleX = 96.0f / dpiX;
-          ptr->scaleY = 96.0f / dpiY;
+          UINT const dpi = GetDpiForWindow(ptr->hWnd);
+          assert(0 != dpi);
+          if (0 < dpi)
+            {
+              float const scale = 96.0f / (float)(dpi);
+              ptr->scaleX = scale;
+              ptr->scaleY = scale;
+            }
+          else
+            {
+              ptr->scaleX = 1.0f;
+              ptr->scaleY = 1.0f;
+            }
+          /*if */
         }
 
         /* Create new context and render target. */

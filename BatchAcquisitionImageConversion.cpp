@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015 UniZG, Zagreb. All rights reserved.
- * (c) 2015 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -21,7 +21,7 @@
   http://www.emva.org/cms/upload/Standards/GenICam_Downloads/GenICam_PFNC_2_0.pdf
 
   \author Tomislav Petkovic
-  \date   2015-05-27
+  \date   2021-04-20
 */
 
 
@@ -213,7 +213,7 @@ ConvertMono8uToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -325,7 +325,7 @@ ConvertMono16uToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -614,7 +614,7 @@ ConvertYUV422ToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -796,7 +796,7 @@ ConvertYUV422BT601ToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -901,7 +901,7 @@ ConvertYUV422BT601ToScaledDownBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -1112,7 +1112,7 @@ ConvertYUV422BT709ToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -1217,7 +1217,7 @@ ConvertYUV422BT709ToScaledDownBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -1348,7 +1348,7 @@ ConvertBGR8ToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -1457,7 +1457,7 @@ ConvertRGB8ToBGR8(
   /* if */
 
   // Lock bitmap.
-  WICRect const rcLock = { 0, 0, width, height };
+  WICRect const rcLock = { 0, 0, (INT)width, (INT)height };
   IWICBitmapLock * pLock = NULL;
   if ( SUCCEEDED(hr) )
     {
@@ -2319,7 +2319,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2328,7 +2328,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2340,7 +2340,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2352,7 +2352,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2361,7 +2361,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_16U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2373,7 +2373,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2388,7 +2388,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8S, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8SC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2397,7 +2397,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_16S, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_16SC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2409,7 +2409,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16SC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2418,7 +2418,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_32S, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_32SC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_GRAY2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_GRAY2BGR);
       }
       break;
 
@@ -2427,7 +2427,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerGB2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerGB2BGR);
       }
       break;
 
@@ -2436,7 +2436,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerBG2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerBG2BGR);
       }
       break;
 
@@ -2445,7 +2445,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerGR2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerGR2BGR);
       }
       break;
 
@@ -2454,7 +2454,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerRG2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerRG2BGR);
       }
       break;
 
@@ -2466,7 +2466,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerGB2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerGB2BGR);
       }
       break;
 
@@ -2478,7 +2478,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerBG2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerBG2BGR);
       }
       break;
 
@@ -2490,7 +2490,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerGR2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerGR2BGR);
       }
       break;
 
@@ -2502,7 +2502,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerRG2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerRG2BGR);
       }
       break;
 
@@ -2514,7 +2514,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerGB2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerGB2BGR);
       }
       break;
 
@@ -2526,7 +2526,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerBG2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerBG2BGR);
       }
       break;
 
@@ -2538,7 +2538,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerGR2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerGR2BGR);
       }
       break;
 
@@ -2550,7 +2550,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerRG2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerRG2BGR);
       }
       break;
 
@@ -2559,7 +2559,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_16U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerGB2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerGB2BGR);
       }
       break;
 
@@ -2568,7 +2568,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_16U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerBG2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerBG2BGR);
       }
       break;
 
@@ -2577,7 +2577,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_16U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerGR2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerGR2BGR);
       }
       break;
 
@@ -2586,7 +2586,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_16U, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BayerRG2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BayerRG2BGR);
       }
       break;
 
@@ -2598,7 +2598,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerGB2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerGB2BGR);
       }
       break;
 
@@ -2610,7 +2610,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerBG2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerBG2BGR);
       }
       break;
 
@@ -2622,7 +2622,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerGR2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerGR2BGR);
       }
       break;
 
@@ -2634,7 +2634,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_16UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_BayerRG2BGR);
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_BayerRG2BGR);
       }
       break;
 
@@ -2643,7 +2643,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8UC3, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_RGB2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_RGB2BGR);
       }
       break;
 
@@ -2658,7 +2658,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8UC4, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_RGBA2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_RGBA2BGR);
       }
       break;
 
@@ -2685,7 +2685,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8UC4, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_BGRA2BGR);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_BGRA2BGR);
       }
       break;
 
@@ -2707,7 +2707,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8UC2, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_YUV2BGR_Y422);
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_YUV2BGR_Y422);
       }
       break;
 
@@ -2742,7 +2742,7 @@ RawBufferToBGRcvMat(
         cv::Mat msrc((int)(height), (int)(width), CV_8UC3, (void *)(src), (int)(stride));
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), CV_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
+        if (NULL != mdst) cv::cvtColor(msrc, *(mdst), cv::COLOR_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
       }
       break;
 
@@ -2754,7 +2754,7 @@ RawBufferToBGRcvMat(
 
         mdst = new cv::Mat((int)(height), (int)(width), CV_8UC3);
         assert(NULL != mdst);
-        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), CV_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
+        if (NULL != mdst) cv::cvtColor(mtmp, *(mdst), cv::COLOR_YUV2RGB); // We use RGB as YUV conversion is implemented incorrectly (Bug #4227).
       }
       break;
     }
@@ -2925,7 +2925,7 @@ RawBufferToGraycvMat(
             assert( 3 == CV_MAT_CN(type) );
             mdst = new cv::Mat((int)height, (int)(width), CV_MAKE_TYPE(depth, 1));
             assert(NULL != mdst);
-            if (NULL != mdst) cv::cvtColor(*(mtmp), *(mdst), CV_BGR2GRAY);
+            if (NULL != mdst) cv::cvtColor(*(mtmp), *(mdst), cv::COLOR_BGR2GRAY);
           }
         /* if */
         SAFE_DELETE(mtmp);
@@ -3115,7 +3115,7 @@ RawBufferTo1CcvMat(
             assert( 3 == CV_MAT_CN(type) );
             mdst = new cv::Mat((int)height, (int)(width), CV_MAKE_TYPE(depth, 1));
             assert(NULL != mdst);
-            if (NULL != mdst) cv::cvtColor(*(mtmp), *(mdst), CV_BGR2GRAY);
+            if (NULL != mdst) cv::cvtColor(*(mtmp), *(mdst), cv::COLOR_BGR2GRAY);
           }
         /* if */
         SAFE_DELETE(mtmp);

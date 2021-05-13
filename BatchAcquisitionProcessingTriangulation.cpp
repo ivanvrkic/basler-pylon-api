@@ -882,7 +882,7 @@ TriangulateTwoViews(
         {
           result = GetCameraRays(x1, y1, PG1, &vx1, &vy1, &vz1);
           assert(true == result);
-          pt1 = cv::Mat(1, 3, CV_64F, &(PG1->center[0]), 1 * sizeof(double));
+          pt1 = cv::Mat(1, 3, CV_64F, &(PG1->center[0]), 3 * sizeof(double));
         }
       else
         {
@@ -900,7 +900,7 @@ TriangulateTwoViews(
         {
           result = GetCameraRays(x2, y2, PG2, &vx2, &vy2, &vz2);
           assert(true == result);
-          pt2 = cv::Mat(1, 3, CV_64F, &(PG2->center[0]), 1 * sizeof(double));
+          pt2 = cv::Mat(1, 3, CV_64F, &(PG2->center[0]), 3 * sizeof(double));
         }
       else
         {

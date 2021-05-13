@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2014-2017 UniZG, Zagreb. All rights reserved.
- * (c) 2014-2017 FER, Zagreb. All rights reserved.
+ * (c) 2014-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2014-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -13,7 +13,7 @@
   \brief  DXGI swap chain creation and deletion.
 
   \author Tomislav Petkovic
-  \date   2017-02-21
+  \date   2021-04-21
 */
 
 
@@ -706,6 +706,7 @@ RenderTargetCreate(
   HRESULT hr = S_OK;
 
   DXGI_SURFACE_DESC BackBufferDesc;
+  DXGI_SWAP_CHAIN_DESC SwapChainDesc;
 
   IDXGISurface * pBackBuffer = NULL;
   ID2D1RenderTarget * pRenderTarget = NULL;
@@ -721,20 +722,36 @@ RenderTargetCreate(
     }
   /* if */
 
-  // Get a DXGI surface description.
+  // Get a DXGI swap chain description.
   if ( SUCCEEDED(hr) )
     {
-      hr = pBackBuffer->GetDesc(&BackBufferDesc);
+      hr = pSwapChain->GetDesc(&SwapChainDesc);
       assert( SUCCEEDED(hr) );
     }
+  /* if */
+  
+  // Get a DXGI surface description.
+  if (SUCCEEDED(hr))
+  {
+      hr = pBackBuffer->GetDesc(&BackBufferDesc);
+      assert(SUCCEEDED(hr));
+  }
   /* if */
 
   // Create the DXGI Surface Render Target.
   if ( SUCCEEDED(hr) )
     {
-      FLOAT dpiX = 0.0f;
-      FLOAT dpiY = 0.0f;
-      pD2DFactory->GetDesktopDpi(&dpiX, &dpiY);
+      FLOAT dpiX = 96.0f;
+      FLOAT dpiY = 96.0f;
+      
+      UINT const dpi = GetDpiForWindow(SwapChainDesc.OutputWindow);
+      assert(0 != dpi);
+      if (0 < dpi)
+        {
+          dpiX = (float)dpi;
+          dpiY = dpiX;
+        }
+      /* if */
 
       D2D1_RENDER_TARGET_PROPERTIES props =
         D2D1::RenderTargetProperties(

@@ -168,6 +168,12 @@
     <ClInclude Include="BatchAcquisitionMainHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BatchAcquisitionPylon.h">
+      <Filter>Header Files\Camera SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="BatchAcquisitionSpinnaker.h">
+      <Filter>Header Files\Camera SDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BatchAcquisitionStdAfx.cpp">
@@ -280,6 +286,12 @@
     </ClCompile>
     <ClCompile Include="BatchAcquisitionMainHelpers.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BatchAcquisitionPylon.cpp">
+      <Filter>Source Files\Camera SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="BatchAcquisitionSpinnaker.cpp">
+      <Filter>Source Files\Camera SDK</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

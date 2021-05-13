@@ -4,8 +4,8 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2015-2017 UniZG, Zagreb. All rights reserved.
- * (c) 2015-2017 FER, Zagreb. All rights reserved.
+ * (c) 2015-2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2015-2021 FER, Zagreb. All rights reserved.
  */
 
 /*!
@@ -21,7 +21,7 @@
   Each acquisition thread maintains its own image encoder queue.
 
   \author Tomislav Petkovic
-  \date   2017-02-03
+  \date   2021-04-21
 */
 
 
@@ -937,7 +937,7 @@ QueuedEncoderImage::StoreToRawFile(
                      FP_xml,
                      L"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                      L"<ImageMetadata xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
-                     L"  <BufferSize>%u</BufferSize>\n"
+                     L"  <BufferSize>%zu</BufferSize>\n"
                      L"  <PixelFormat>%s</PixelFormat>\n"
                      L"  <Width>%u</Width>\n"
                      L"  <Height>%u</Height>\n"
