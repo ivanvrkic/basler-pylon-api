@@ -284,21 +284,73 @@ MainSelectCameraSDK_inline(
   int const pressed_key = TimedWaitForNumberKey(timeout_ms, 10, true, true, hWndCommand);
   if (1 == pressed_key)
     {
+#ifdef HAVE_FLYCAPTURE2_SDK
       selected_camera_SDK = CAMERA_SDK_FLYCAPTURE2;
 
       int const cnt1 = wprintf(L"\n");
       int const cnt2 = wprintf(gMsgCameraSDKUseFlyCapture2);
       assert( (0 < cnt1) && (0 < cnt2) );
+
+#else /* HAVE_FLYCAPTURE2_SDK */
+
+      int const cnt1 = wprintf(L"\n");
+      int const cnt2 = wprintf(gMsgCameraSDKUnsupportedFlyCapture2);
+      int const cnt3 = wprintf(gMsgCameraSDKRevertToDefault);
+      assert( (0 < cnt1) && (0 < cnt2) && (0 < cnt3) );
+#endif /* HAVE_FLYCAPTURE2_SDK */
     }
   else if (2 == pressed_key)
     {
+#ifdef HAVE_SAPERA_SDK
       selected_camera_SDK = CAMERA_SDK_SAPERA;
 
       int const cnt1 = wprintf(L"\n");
       int const cnt2 = wprintf(gMsgCameraSDKUseSaperaLT);
       assert( (0 < cnt1) && (0 < cnt2) );
+
+#else /* HAVE_SAPERA_SDK */
+
+      int const cnt1 = wprintf(L"\n");
+      int const cnt2 = wprintf(gMsgCameraSDKUnsupportedSaperaLT);
+      int const cnt3 = wprintf(gMsgCameraSDKRevertToDefault);
+      assert( (0 < cnt1) && (0 < cnt2) && (0 < cnt3) );
+#endif /* HAVE_SAPERA_SDK */
     }
-  else if ( (3 == pressed_key) && (true == allow_from_file) )
+  else if (3 == pressed_key)
+    {
+#ifdef HAVE_PYLON_SDK
+      selected_camera_SDK = CAMERA_SDK_PYLON;
+
+      int const cnt1 = wprintf(L"\n");
+      int const cnt2 = wprintf(gMsgCameraSDKUsePylon);
+      assert( (0 < cnt1) && (0 < cnt2) );
+
+#else /* HAVE_PYLON_SDK */
+
+      int const cnt1 = wprintf(L"\n");
+      int const cnt2 = wprintf(gMsgCameraSDKUnsupportedPylon);
+      int const cnt3 = wprintf(gMsgCameraSDKRevertToDefault);
+      assert( (0 < cnt1) && (0 < cnt2) && (0 < cnt3) );
+#endif /* HAVE_PYLON_SDK */
+    }
+  else if (4 == pressed_key)
+    {
+#ifdef HAVE_SPINNAKER_SDK
+      selected_camera_SDK = CAMERA_SDK_SPINNAKER;
+
+      int const cnt1 = wprintf(L"\n");
+      int const cnt2 = wprintf(gMsgCameraSDKUseSpinnaker);
+      assert( (0 < cnt1) && (0 < cnt2) );
+
+#else /* HAVE_SPINNAKER_SDK */
+
+      int const cnt1 = wprintf(L"\n");
+      int const cnt2 = wprintf(gMsgCameraSDKUnsupportedSpinnaker);
+      int const cnt3 = wprintf(gMsgCameraSDKRevertToDefault);
+      assert( (0 < cnt1) && (0 < cnt2) && (0 < cnt3) );
+#endif /* HAVE_SPINNAKER_SDK */
+    }
+  else if ( (5 == pressed_key) && (true == allow_from_file) )
     {
       selected_camera_SDK = CAMERA_SDK_FROM_FILE;
 
@@ -1454,7 +1506,7 @@ MainSetInitialOutputDirectoryForImageEncoder_inline(
   if (false == savedir) savedir = ImageEncoderTrySetDirectory(pImageEncoder, _T("C:\\Output"));
   if (false == savedir) savedir = ImageEncoderTrySetDirectory(pImageEncoder, _T("D:\\Output"));
   if (false == savedir) savedir = ImageEncoderSetDirectory(pImageEncoder, _T("E:\\Output"), NULL);
-  
+
   return savedir;
 }
 /* MainSetInitialOutputDirectoryForImageEncoder_inline */
@@ -1817,6 +1869,23 @@ _tmain(
 #pragma endregion // Initialize operating system components
 
 
+#ifdef HAVE_PYLON_SDK
+  
+  // Initialize Pylon SDK.
+  Pylon::PylonAutoInitTerm autoInitTerm;
+  
+#endif /* HAVE_PYLON_SDK */
+
+  
+#ifdef HAVE_SPINNAKER_SDK
+  
+  // Initialize Spinnaker SDK.
+  Spinnaker::SystemPtr spinnaker_system = Spinnaker::System::GetInstance();
+  
+#endif /* HAVE_SPINNAKER_SDK */
+  
+  
+
   /****** STARTUP ******/
 
 #pragma region // Startup
@@ -1988,10 +2057,10 @@ _tmain(
     bool readdir = false;
 
     // First try gamma corrected MPS 20:21:25 pattern.
-    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18")); 
+    if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("E:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("D:\\Input\\1280x800 MPS 20+21+25 (all), gamma 2.18"));
-    
+
     // Then try gamma corrected MPS 15:19 pattern.
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 MPS 15+19 (all), gamma 2.18"));
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("E:\\Input\\1280x800 MPS 15+19 (all), gamma 2.18"));
@@ -2004,7 +2073,7 @@ _tmain(
 
     // Finally, try some obsolete patterns.
     if (false == readdir) readdir = pImageList->TrySetDirectory(_T("C:\\Input\\1280x800 GC+PS (all)"));
-    
+
     assert(true == readdir);
     if (true != readdir) return EXIT_FAILURE;
 
@@ -2311,8 +2380,8 @@ _tmain(
   // Loop unit user requests exit. Loop is time-sliced; we periodically check if a key is pressed.
   HANDLE rhnd = GetStdHandle(STD_INPUT_HANDLE);
   {
-      BOOL const flush = FlushConsoleInputBuffer(rhnd);
-      assert(0 != flush);
+    BOOL const flush = FlushConsoleInputBuffer(rhnd);
+    assert(0 != flush);
   }
 
   wint_t key = 0;
@@ -2354,7 +2423,7 @@ _tmain(
           }
         else
           {
-            key = event_buffer.Event.KeyEvent.wVirtualKeyCode;            
+            key = event_buffer.Event.KeyEvent.wVirtualKeyCode;
             ctrl = (true == ctrl_pressed);
 
             // Translate numeric keys.
@@ -5649,6 +5718,15 @@ _tmain(
       SAFE_DELETE(pCameraName);
     }
   /* while */
+
+
+#ifdef HAVE_SPINNAKER_SDK
+
+  // Release Spinnaker SDK.
+  spinnaker_system->ReleaseInstance();
+
+#endif /* HAVE_SPINNAKER_SDK */
+
 
   SAFE_DELETE(pAcquisitionTag);
 

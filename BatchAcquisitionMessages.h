@@ -53,21 +53,46 @@ static const TCHAR gMsgCameraSDK[] =
   L"Please select camera SDK:\n"
   L" 1) PointGrey FlyCapture 2 (default)\n"
   L" 2) Teledyne Dalsa SaperaLT SDK\n"
-  L" 3) Acquisition from a directory\n";
+  L" 3) Basler Pylon SDK\n"
+  L" 4) FLIR Spinnaker SDK\n"
+  L" 5) Acquisition from a directory\n";
 
 static const TCHAR gMsgCameraSDKExceptFromFile[] =
   L"Please select camera SDK:\n"
   L" 1) PointGrey FlyCapture 2 (default)\n"
-  L" 2) Teledyne Dalsa SaperaLT SDK\n";
+  L" 2) Teledyne Dalsa SaperaLT SDK\n"
+  L" 3) Basler Pylon SDK\n"
+  L" 4) FLIR Spinnaker SDK\n";
 
 static const TCHAR gMsgCameraSDKUseDefault[] =
   L"Using default camera SDK.\n";
 
+static const TCHAR gMsgCameraSDKRevertToDefault[] =
+  L"Reverting to default camera SDK.\n";
+
 static const TCHAR gMsgCameraSDKUseFlyCapture2[] =
   L"Using FlyCapture2 SDK.\n";
 
+static const TCHAR gMsgCameraSDKUnsupportedFlyCapture2[] =
+  L"Program compiled without support for FlyCapture2 SDK.\n";
+
 static const TCHAR gMsgCameraSDKUseSaperaLT[] =
   L"Using SaperaLT SDK.\n";
+
+static const TCHAR gMsgCameraSDKUnsupportedSaperaLT[] =
+  L"Program compiled without support for Sapera SDK.\n";
+
+static const TCHAR gMsgCameraSDKUsePylon[] =
+  L"Using Pylon SDK.\n";
+
+static const TCHAR gMsgCameraSDKUnsupportedPylon[] =
+  L"Program compiled without support for Sapera SDK.\n";
+
+static const TCHAR gMsgCameraSDKUseSpinnaker[] =
+  L"Using Spinnaker SDK.\n";
+
+static const TCHAR gMsgCameraSDKUnsupportedSpinnaker[] =
+  L"Program compiled without support for Spinnaker SDK.\n";
 
 static const TCHAR gMsgCameraSDKUseFromFile[] =
   L"Using dummy from file acquisition.\n";

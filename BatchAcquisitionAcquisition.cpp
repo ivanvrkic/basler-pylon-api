@@ -1232,42 +1232,42 @@ AcquisitionThread(
 
              1) Ending the blocking acquisition mode
 
-        In blocking acquistion mode all projected frames are always captured by design.
-        The event MAIN_END_DRAW is therefore raised in the rendering thread once all
-        MAIN_END_CAMERA events are raised in the callback transfer functions after the
-        last frame is acquired and successfully transfered from the camera.
+             In blocking acquistion mode all projected frames are always captured by design.
+             The event MAIN_END_DRAW is therefore raised in the rendering thread once all
+             MAIN_END_CAMERA events are raised in the callback transfer functions after the
+             last frame is acquired and successfully transfered from the camera.
 
 
-        2) Ending the non-blocking acquisition mode
+             2) Ending the non-blocking acquisition mode
 
-    In non-blocking acquisition mode some projected frames may be dropped. If the last
-    frame in the sequence is dropped then the MAIN_END_CAMERA event cannot be raised at all.
-    Therefore, in non-blocking acquisition mode only reliable place where the MAIN_END_DRAW
-    can be signalled is after all images are presented by the rendering thread. However,
-    at that time all images are not yet captured so the rendering thread does not immediately
-    signal MAIN_END_DRAW but instead it waits for a pre-specified time for MAIN_END_CAMERA
-                                                      events to be signalled. If all MAIN_END_CAMERA events are signalled then the last
-                                                        frame was successfully captured, otherwise the last frame was dropped for at least one
-                                                                                                                                       camera.
-
-
-                                                                                                                                       3) Ending the acquisition for a fixed SL pattern
-
-                                                                                                                                       When a fixed SL pattern is used the rendering thread has nothing particular to do once
-                                                                                                                                                                                                                           the frame is rendered as almost all work is performed by the acquisition thread.
-                                                                                                                                                                                                                           The only event executed by the rendering thread is CAMERA_SYNC_TRIGGERS to ensure
-                                                                                                                                                                                                                           multiple cameras are synchronously triggered. In this case we use both MAIN_END_CAMERA
-                                                                                                                                                                                                                           and MAIN_END_DRAW events. First, MAIN_END_CAMERA events will be signalled from the
-                                                                                                                                                                                                                           image transfer callbacks after the last frame is acquired. After triggering the camera
-                                                                                                                                                                                                                           for the last requested frame the acquisition threads will wait for MAIN_END_CAMERA events.
-                                                                                                                                                                                                                           The normal event cycle for a fixed SL pattern will than continue with the
-                                                                                                                                                                                                                           CAMERA_SYNC_TRIGGERS event which will raise the MAIN_END_DRAW event and stop
-                                                                                                                                                                                                                           the acquisition.
+             In non-blocking acquisition mode some projected frames may be dropped. If the last
+             frame in the sequence is dropped then the MAIN_END_CAMERA event cannot be raised at all.
+             Therefore, in non-blocking acquisition mode only reliable place where the MAIN_END_DRAW
+             can be signalled is after all images are presented by the rendering thread. However,
+             at that time all images are not yet captured so the rendering thread does not immediately
+             signal MAIN_END_DRAW but instead it waits for a pre-specified time for MAIN_END_CAMERA
+             events to be signalled. If all MAIN_END_CAMERA events are signalled then the last
+             frame was successfully captured, otherwise the last frame was dropped for at least one
+             camera.
 
 
-                                                                                                                                                                                                                           DIFFERENCES BETWEEN CAMERA DRIVES
+             3) Ending the acquisition for a fixed SL pattern
 
-                                                                                                                                                                                                                           There exist several different camera drives which may be used. These are:
+             When a fixed SL pattern is used the rendering thread has nothing particular to do once
+             the frame is rendered as almost all work is performed by the acquisition thread.
+             The only event executed by the rendering thread is CAMERA_SYNC_TRIGGERS to ensure
+             multiple cameras are synchronously triggered. In this case we use both MAIN_END_CAMERA
+             and MAIN_END_DRAW events. First, MAIN_END_CAMERA events will be signalled from the
+             image transfer callbacks after the last frame is acquired. After triggering the camera
+             for the last requested frame the acquisition threads will wait for MAIN_END_CAMERA events.
+             The normal event cycle for a fixed SL pattern will than continue with the
+             CAMERA_SYNC_TRIGGERS event which will raise the MAIN_END_DRAW event and stop
+             the acquisition.
+
+
+             DIFFERENCES BETWEEN CAMERA DRIVES
+
+             There exist several different camera drives which may be used. These are:
 
              1) FlyCapture2 API (PointGrey's/FLIR's cameras),
              2) Sapera API (Teledyne Dalsa's cameras),
@@ -3830,7 +3830,7 @@ IsAcquisitionLive(
       return true;
     }
   /* if */
-  
+
   if ( (NULL == P->pFlyCapture2SDK) &&
        (NULL != P->pSaperaSDK) &&
        (NULL == P->pPylonSDK) &&
@@ -3852,7 +3852,7 @@ IsAcquisitionLive(
       return true;
     }
   /* if */
-  
+
   if ( (NULL == P->pFlyCapture2SDK) &&
        (NULL == P->pSaperaSDK) &&
        (NULL == P->pPylonSDK) &&
@@ -3863,7 +3863,7 @@ IsAcquisitionLive(
       return true;
     }
   /* if */
-  
+
   return false;
 }
 /* IsAcquisitionLive */
@@ -3907,7 +3907,7 @@ GetUniqueCameraIdentifier(
     {
       name = AcquisitionParametersSpinnakerGetCameraIdentifier(P->pSpinnakerSDK);
       assert(NULL != name);
-    }  
+    }
   else if (NULL != P->pFromFile)
     {
       wchar_t const * const directory = AcquisitionParametersFromFileGetDirectory(P->pFromFile);
