@@ -142,9 +142,8 @@
 #define HAVE_PYLON_SDK
 #ifdef HAVE_PYLON_SDK
 
-// TODO: Include header here.
-
-// TODO: Include libs here. Note: Will become unnecessary after CMAKE is added.
+// Note that PylonIncludes.h automatically adds libs required for linking.
+#include <pylon/PylonIncludes.h>
 
 #endif /* HAVE_PYLON_SDK */
 
@@ -154,9 +153,17 @@
 //#define HAVE_SPINNAKER_SDK
 #ifdef HAVE_SPINNAKER_SDK
 
-// TODO: Include header here.
+#include <Spinnaker.h>
 
-// TODO: Include libs here. Note: Will become unnecessary after CMAKE is added.
+#ifdef DEBUG
+
+#pragma comment(lib, "Spinnaker_v140.lib")
+
+#else
+
+#pragma comment(lib, "Spinnakerd_v140.lib")
+
+#endif /* DEBUG */
 
 #endif /* HAVE_SPINNAKER_SDK */
 
