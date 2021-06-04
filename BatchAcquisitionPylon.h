@@ -22,7 +22,7 @@
 
 
 #include "BatchAcquisition.h"
-
+#include "BatchAcquisitionPylonCallbacks.h"
 
 struct AcquisitionParameters_;
 
@@ -38,8 +38,15 @@ struct AcquisitionParametersPylon_
 
 #ifdef HAVE_PYLON_SDK
   // Members if SDK is available go here.
+    Pylon::CInstantCamera * pCamera;
+    Pylon::CCustomCameraEventHandler * pCameraEventHandler;
+    Pylon::CCustomImageEventHandler * pImageEventHandler;
+
 #else
   // Dummy members which take the same amount of memory if SDK is not avalable go here.
+    void* pCamera;
+    void* pCameraEventHandler;
+    void* pImageEventHandler;
 #endif /* HAVE_PYLON_SDK */
 
 } AcquisitionParametersPylon;

@@ -28,10 +28,13 @@
 
 #include "BatchAcquisitionMessages.h"
 #include "BatchAcquisitionPylon.h"
+
 #include "BatchAcquisitionAcquisition.h"
 #include "BatchAcquisitionWindowPreview.h"
 #include "BatchAcquisitionKeyboard.h"
 
+
+using namespace Pylon;
 
 
 /****** HELPER FUNCTIONS ******/
@@ -52,6 +55,7 @@ AcquisitionParametersPylonBlank_inline(
   if (NULL == P) return;
 
   // TODO: Add blanking code.
+  P->pCamera = NULL;
 }
 /* AcquisitionParametersPylonBlank_inline */
 
@@ -156,6 +160,8 @@ AcquisitionParametersPylonRelease(
     assert(true == stop);
 
     // TODO: Add code here!
+
+    SAFE_DELETE(P->pCamera);
   }
 #endif /* HAVE_PYLON_SDK */
 
@@ -260,17 +266,48 @@ AcquisitionParametersPylonCreate(
   BOOL status = TRUE;
 
 #ifdef HAVE_PYLON_SDK
-
-
+  DeviceInfoList_t devices;
+  CInstantCameraArray cameras(1);//devices.size());
   /****** PRINT SDK INFO******/
 
   // TODO: Add SDK info dump here!
+  
   
 
   /****** SELECT CAMERA ******/
 
   // TODO: Add camera selection code here!
+  //transport layer factory
+  CTlFactory & tlFactory = CTlFactory::GetInstance();
+
+  assert(NULL == P->pCamera);
+  P->pCamera = new CInstantCamera();
+  assert(NULL != P->pCamera);
+  if (NULL == P->pCamera)
+  {
+      status = FALSE;
+      goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
+  }
+  // Get all attached devices and exit application if no device is found.
   
+  if (tlFactory.EnumerateDevices(devices) == 0)
+  {
+      
+      status = FALSE;
+      goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
+  }
+  
+
+
+  // Create and attach all Pylon Devices.
+  for (size_t i = 0; i < cameras.GetSize(); ++i)
+  {
+      cameras[i].Attach(tlFactory.CreateDevice(devices[i]));
+
+      // Print the model name of the camera.
+      cout << "Using device " << cameras[i].GetDeviceInfo().GetModelName() << endl;
+  }
+
 
   /****** CONFIGURE CAMERA ******/
 
@@ -281,10 +318,46 @@ AcquisitionParametersPylonCreate(
 
   // TODO: Add initialization code here!
 
-  
+  assert(NULL != P->pCameraEventHandler);
+  P->pCameraEventHandler = new CCustomCameraEventHandler;
+  assert(NULL != P->pCameraEventHandler);
+  assert(NULL != P->pImageEventHandler);
+  P->pImageEventHandler = new CCustomImageEventHandler;
+  assert(NULL != P->pImageEventHandler);
+
   /****** REGISTER CALLBACKS ******/
 
-  // TODO: If callbacks are used add callback registration here!
+  P->pCamera->RegisterConfiguration(new CSoftwareTriggerConfiguration, RegistrationMode_ReplaceAll, Cleanup_Delete);
+  ////P->pCamera.RegisterConfiguration(new CConfigurationEventPrinter, RegistrationMode_Append, Cleanup_Delete); // Camera use.
+  P->pCamera->RegisterImageEventHandler(new CCustomImageEventHandler, RegistrationMode_Append, Cleanup_Delete);
+  P->pCamera->GrabCameraEvents = true;
+  P->pCamera->Open();
+  //assert(P->pCamera->EventSelector->IsWritable());
+  //  // Cameras based on SFNC 2.0 or later, e.g., USB cameras
+  //  if (P->pCamera->GetSfncVersion() >= Sfnc_2_0_0)
+  //  {
+  //      P->pCamera->RegisterCameraEventHandler(P->pCameraEventHandler, "EventExposureEndData", ExposureEndEventId, RegistrationMode_ReplaceAll, Cleanup_None);
+  //  }
+  //  else
+  //  {
+  //      P->pCamera->RegisterCameraEventHandler(P->pCameraEventHandler, "ExposureEndEventData", ExposureEndEventId, RegistrationMode_ReplaceAll, Cleanup_None);
+  //      P->pCamera->RegisterCameraEventHandler(P->pCameraEventHandler, "EventOverrunEventData", EventOverrunEventId, RegistrationMode_Append, Cleanup_None);
+  //      P->pCamera->RegisterCameraEventHandler(P->pCameraEventHandler, "EventFrameStartWaitData", FrameStartWaitEventId, RegistrationMode_Append, Cleanup_None);
+  //      P->pCamera->RegisterCameraEventHandler(P->pCameraEventHandler, "EventFrameTriggerMissedData", FrameTriggerMissedEventId, RegistrationMode_Append, Cleanup_None);
+  //      P->pCamera->RegisterCameraEventHandler(P->pCameraEventHandler, "FrameStartEventData", FrameStartEventId, RegistrationMode_Append, Cleanup_None);
+  //  }
+  //P->pCamera->EventSelector->SetValue(EventSelector_ExposureEnd);
+  //if (!P->pCamera->EventNotification.TrySetValue(EventNotification_On))
+  //{
+  //    P->pCamera.EventNotification.SetValue(EventNotification_GenICamEvent);
+  //}
+  //if (P->pCamera.EventSelector.TrySetValue(EventSelector_EventOverrun))
+  //{
+  //    if (!P->pCamera.EventNotification.TrySetValue(EventNotification_On))
+  //    {
+  //        P->pCamera.EventNotification.SetValue(EventNotification_GenICamEvent);
+  //    }
+  //}
   
 
   /****** START ACQUISITION ******/
