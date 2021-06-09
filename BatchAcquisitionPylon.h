@@ -22,9 +22,8 @@
 
 
 #include "BatchAcquisition.h"
+#include "BatchAcquisitionPylonCallbacks.h"
 
-
-struct AcquisitionParameters_;
 
 
 //! Parameters of the Pylon camera.
@@ -37,9 +36,15 @@ struct AcquisitionParametersPylon_
 {
 
 #ifdef HAVE_PYLON_SDK
-  // Members if SDK is available go here.
+  Pylon::CInstantCameraArray * pCameraArray; //!< An array which temporarly stores all available cameras.
+  Pylon::CInstantCamera * pCamera; //!< Instant camera class.
+  CCustomCameraEventHandler * pCameraEventHandler; //!< Class to handle camera events.
+  CCustomImageEventHandler * pImageEventHandler; //!< Class to handle image events.
 #else
-  // Dummy members which take the same amount of memory if SDK is not avalable go here.
+  void * pCameraArray;
+  void * pCamera;
+  void * pCameraEventHandler;
+  void * pImageEventHandler;
 #endif /* HAVE_PYLON_SDK */
 
 } AcquisitionParametersPylon;

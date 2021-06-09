@@ -1084,7 +1084,15 @@ static const TCHAR gDbgRequeueSLPattern[] =
 #endif /* __BATCHACQUISITIONSAPERA_CPP */
 
 
-#ifdef __BATCHACQUISITIONSAPERACALLBACKS_CPP
+#ifdef __BATCHACQUISITIONPYLONCALLBACKS_CPP
+
+static const TCHAR gDbgEventOnAttach[] =
+  L"[Pylon] OnAttach event for device %s.";
+
+#endif /* __BATCHACQUISITIONPYLONCALLBACKS_CPP */
+
+
+#if defined(__BATCHACQUISITIONSAPERACALLBACKS_CPP) || defined(__BATCHACQUISITIONPYLONCALLBACKS_CPP)
 
 static const char gDbgCallbackInformation[] =
   "[SaperaLT] Event %s (%d) received %d times at QPC %llu.\n";
