@@ -15,7 +15,8 @@
   This file contains strings for all messages that are output to the user.
 
   \author Tomislav Petkovic
-  \date   2021-05-10
+  \author Ivan Vrkic
+  \date   2021-06-25
 */
 
 
@@ -1088,7 +1089,46 @@ static const TCHAR gDbgRequeueSLPattern[] =
 
 static const TCHAR gDbgEventOnAttach[] =
   L"[Pylon] OnAttach event for device %s.";
+static const TCHAR gDbgEventOnAttached[] =
+L"[Pylon] OnAttached event for device %s.";
+static const TCHAR gDbgEventOnOpen[] =
+L"[Pylon] OnOpen event for device% s.";
+static const TCHAR gDbgEventOnOpened[] =
+L"[Pylon] OnOpened event for device% s.";
 
+static const TCHAR gDbgEventOnGrabStart[] =
+L"[Pylon] OnGrabStart event for device %s.";
+static const TCHAR gDbgEventOnGrabStarted[] =
+L"[Pylon] OnGrabStarted event for device %s.";
+static const TCHAR gDbgEventOnGrabStop[] =
+L"[Pylon] OnGrabStop event for device %s.";
+static const TCHAR gDbgEventOnGrabStopped[] =
+L"[Pylon] OnGrabStopped event for device %s.";
+
+static const TCHAR gDbgEventOnClose[] =
+L"[Pylon] OnClose event for device %s.";
+static const TCHAR gDbgEventOnClosed[] =
+L"[Pylon] OnClosed event for device %s.";
+static const TCHAR gDbgEventOnDestroy[] =
+L"[Pylon] OnDestroy event for device %s.";
+static const TCHAR gDbgEventOnDestroyed[] =
+L"[Pylon] OnDestroyed event";
+static const TCHAR gDbgEventOnDetach[] =
+L"[Pylon] OnDetach event for device %s.";
+static const TCHAR gDbgEventOnDetached[] =
+L"[Pylon] OnDetached event for device %s.";
+static const TCHAR gDbgEventOnGrabError[] =
+L"[Pylon] OnGrabError event for device %s.";
+static const TCHAR gDbgEventOnCameraDeviceRemoved[] =
+L"[Pylon] OnCameraDeviceRemoved event for device %s.";
+static const TCHAR gDbgEventOnGrabErrorMessage[] =
+L"[Pylon] Error Message: %s.";
+
+static const TCHAR gDbgImageTransferFailed[] =
+L"[CAM %d] Image data transfer failed for frame %ld.\n";
+
+static const TCHAR gDbgRequeueSLPattern[] =
+L"[CAM %d] Requeuing pattern %s; retry %d of %d.\n";
 #endif /* __BATCHACQUISITIONPYLONCALLBACKS_CPP */
 
 
