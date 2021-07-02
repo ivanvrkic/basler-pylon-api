@@ -14,7 +14,7 @@
 
   \author Ivan Vrkic
   \author Tomislav Petkovic
-  \date   2021-06-09
+  \date   2021-06-25
 */
 
 
@@ -38,7 +38,12 @@
 
 using namespace Pylon;
 
+//! OnAttach event handler.
+/*!
+  Handles OnAttach event.
 
+  \param camera Reference to camera class.
+*/
 void
 CCustomConfigurationEventHandler::OnAttach(
                                            CInstantCamera & camera
@@ -59,84 +64,180 @@ CCustomConfigurationEventHandler::OnAttach(
 void
 CCustomConfigurationEventHandler::OnAttached(CInstantCamera& camera)
 {
-  Debugfwprintf(stderr, gDbgEventOnAttach, camera.GetDeviceInfo().GetModelName().c_str());
+  Debugfwprintf(stderr, gDbgEventOnAttached, camera.GetDeviceInfo().GetModelName().c_str());
 }
 /* CCustomConfigurationEventHandler::OnAttached */
 
 
+//! OnOpen event handler.
+/*!
+  Handles OnOpen event.
 
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnOpen(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnOpen event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnOpen, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnOpen */
 
+//! OnOpened event handler.
+/*!
+  Handles OnOpened event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnOpened(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnOpened event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnOpened, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnOpened */
 
+//! OnGrabStart event handler.
+/*!
+  Handles OnGrabStart event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnGrabStart(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnGrabStart event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnGrabStart, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnGrabStart */
 
+//! OnGrabStarted event handler.
+/*!
+  Handles OnGrabStarted event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnGrabStarted(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnGrabStarted event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnGrabStarted, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnGrabStarted */
 
+//! OnGrabStop event handler.
+/*!
+  Handles OnGrabStop event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnGrabStop(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnGrabStop event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnGrabStop, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnGrabStop */
 
+//! OnGrabStopped event handler.
+/*!
+  Handles OnGrabStopped event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnGrabStopped(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnGrabStopped event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnGrabStopped, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnGrabStopped */
 
+//! OnClose event handler.
+/*!
+  Handles OnClose event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnClose(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnClose event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnClose, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnClose */
 
+//! OnClosed event handler.
+/*!
+  Handles OnClosed event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnClosed(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnClosed event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnClosed, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnClosed */
 
+//! OnDestroy event handler.
+/*!
+  Handles OnDestroy event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnDestroy(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnDestroy event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnDestroy, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnDestroy */
 
+//! OnDestroyed event handler.
+/*!
+  Handles OnDestroyed event.
+
+  \param Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnDestroyed(CInstantCamera& /*camera*/)
 {
-  Debugfprintf(stderr, "OnDestroyed event");
+  Debugfwprintf(stderr, gDbgEventOnDestroyed);
 }
+/* CCustomConfigurationEventHandler::OnDestroyed */
 
+//! OnDetach event handler.
+/*!
+  Handles OnDetach event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnDetach(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnDetach event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnDetach, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnDetach */
 
+//! OnDetached event handler.
+/*!
+  Handles OnDetached event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnDetached(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnDetached event for device %s",camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnDetached, camera.GetDeviceInfo().GetModelName());
 }
+/* CCustomConfigurationEventHandler::OnDetached */
 
+//! OnGrabError event handler.
+/*!
+  Handles OnGrabError event.
+
+  \param camera Reference to camera class.
+  \param camera Pointer to error message.
+*/
 void CCustomConfigurationEventHandler::OnGrabError(CInstantCamera& camera, const char* errorMessage)
 {
-  Debugfprintf(stderr, "OnGrabError event for device %s", camera.GetDeviceInfo().GetModelName());
-  Debugfprintf(stderr, "Error Message: ", errorMessage);
+  Debugfwprintf(stderr, gDbgEventOnGrabError, camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnGrabErrorMessage, errorMessage);
 }
+/* CCustomConfigurationEventHandler::OnGrabError */
 
+//! OnCameraDeviceRemoved event handler.
+/*!
+  Handles OnCameraDeviceRemoved event.
+
+  \param camera Reference to camera class.
+*/
 void CCustomConfigurationEventHandler::OnCameraDeviceRemoved(CInstantCamera& camera)
 {
-  Debugfprintf(stderr, "OnCameraDeviceRemoved event for device %s", camera.GetDeviceInfo().GetModelName());
+  Debugfwprintf(stderr, gDbgEventOnCameraDeviceRemoved, camera.GetDeviceInfo().GetModelName());
 }
-
-
+/* CCustomConfigurationEventHandler::OnCameraDeviceRemoved */
 
 //! 
 /*!
@@ -320,6 +421,103 @@ CCustomImageEventHandler::OnImageGrabbed(
   if (NULL != pPylon)
     {
       // TODO: Image buffer test code goes here!
+      BOOL const get = ptrGrabResult->GrabSucceeded();
+      if (FALSE == get)
+      {
+              // Acquisition failed.
+              acquired = false;
+              if ((true == sData.fBatch) && (false == sData.fFixed))
+              {
+                  int const CameraID = this->pAcquisition->CameraID;
+                  int const index = sData.index;
+                  int const ProjectorID = sData.ProjectorID;
+                  unsigned int const retry = sData.retry + 1;
+                  TCHAR const* const pFilename = sData.pFilename->c_str();
+
+                  Debugfwprintf(stderr, gDbgImageTransferFailed, CameraID + 1, sData.key + 1);
+                  Debugfwprintf(stderr, gDbgRequeueSLPattern, CameraID + 1, pFilename, retry, 2);
+
+                  // Requeue image.
+                  if ((NULL != this->pAcquisition->pImageDecoder) &&
+                      (NULL != this->pAcquisition->pImageDecoder->pImageList) &&
+                      (3 > retry)
+                      )
+                  {
+                      ImageFileList* const pImageList = this->pAcquisition->pImageDecoder->pImageList;
+                      assert(NULL != pImageList);
+
+                      QueuedDecoderImage* item = NULL;
+
+                      StructuredLightPatternType pattern_type = SL_PATTERN_INVALID;
+
+                      double const delay = 0.0;
+                      double const exposure = 0.0;
+                      bool const skip_acquisition = false;
+
+                      wchar_t filename[MAX_PATH];
+                      bool const get_filename = pImageList->GetFileNameAt(index, filename, MAX_PATH);
+
+                      bool const have_filename = pImageList->HaveFileNameAt(index);
+                      if (true == have_filename)
+                      {
+                          wchar_t fullname[MAX_PATH];
+                          bool const get_URI = pImageList->GetFullFileNameAt(index, fullname, MAX_PATH);
+
+                          pattern_type = SL_PATTERN_FROM_FILE;
+
+                          bool const get = get_URI && get_filename;
+                          if (true == get)
+                          {
+                              assert(NULL == item);
+                              item = new QueuedDecoderImage(this->pAcquisition->pImageDecoder->pWICFactory, fullname);
+                              assert(NULL != item);
+                          }
+                          /* if */
+                      }
+                      else
+                      {
+                          pattern_type = SL_PATTERN_BLACK;
+
+                          D3DCOLORVALUE color_black;
+                          color_black.r = 0.0f;
+                          color_black.g = 0.0f;
+                          color_black.b = 0.0f;
+                          color_black.a = 1.0f;
+
+                          bool const get = get_filename;
+                          if (true == get)
+                          {
+                              assert(NULL == item);
+                              item = new QueuedDecoderImage(color_black);
+                              assert(NULL != item);
+                          }
+                          /* if */
+                      }
+                      /* if */
+
+                      if (NULL != item)
+                      {
+                          item->pattern_type = pattern_type;
+                          item->index = index;
+                          item->projectorID = ProjectorID;
+                          item->retry = retry;
+                          SAFE_DELETE(item->pFilename);
+                          item->pFilename = new std::wstring(filename);
+                          item->delay = delay;
+                          item->exposure = exposure;
+                          item->fSkipAcquisition = skip_acquisition;
+
+                          bool const inserted = ImageDecoderQueueImage(this->pAcquisition->pImageDecoder, item);
+                          if (false == inserted) SAFE_DELETE(item);
+                      }
+                      /* if (NULL != item) */
+                  }
+                  /* if */
+              }
+              /* if */
+          }
+     
+        // Acquisition succeeded. Nothing to do!
     }
   /* if */
 
@@ -337,7 +535,7 @@ CCustomImageEventHandler::OnImageGrabbed(
           //BOOL const copy_image = item->CopyImageFrom(pSapera->pBuffer, pSapera->pCamera);
           //assert(TRUE == copy_image);
 
-          //bool const queue = ImageEncoderQueueImage(P->pImageEncoder, item);
+          //bool const queue = ImageEncoderQueueImage(this->pAcquisition->pImageEncoder, item);
           //assert(true == queue);
           //if (true != queue) SAFE_DELETE(item);
         }
@@ -366,7 +564,7 @@ CCustomImageEventHandler::OnImageGrabbed(
   if ((true == this->pAcquisition->fView) && (NULL != this->pAcquisition->pView))
     {
       // TODO: Update to push the image data into the preview window.
-      //PushImage(P->pView, P->CameraID, pSapera->pBuffer, pSapera->pCamera);
+      //PushImage(this->pAcquisition->pView, this->pAcquisition->CameraID, pSapera->pBuffer, pSapera->pCamera);
     }
   /* if */
 }
