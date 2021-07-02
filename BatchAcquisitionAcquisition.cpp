@@ -1472,7 +1472,9 @@ AcquisitionThread(
                   }
                 else if (true == have_PylonSDK)
                   {
-                    // TODO: Add test for camera readiness.
+                    assert(0 < parameters->exposureTime_QPC);
+                    bool const trigger_ready = pPylonSDK->pCamera->WaitForFrameTriggerReady(10 * parameters->exposureTime_QPC);
+                    assert(true == trigger_ready);
                   }
                 else if (true == have_SpinnakerSDK)
                   {
@@ -2149,7 +2151,7 @@ AcquisitionThread(
                 }
               else if (true == have_PylonSDK)
                 {
-                  // TODO: If possible add camera readiness test here!
+                  bool const trigger_ready = pPylonSDK->pCamera->WaitForFrameTriggerReady(parameters->exposureTime_QPC);
 
                   assert(true == trigger_ready);
 
@@ -2159,7 +2161,10 @@ AcquisitionThread(
                   if (true == trigger_on_time)
                     {
 #ifdef HAVE_PYLON_SDK
-                      // TODO: Triggering code goes here!
+                      Pylon::CGrabResultPtr grabptr;
+                      pPylonSDK->pCamera->ExecuteSoftwareTrigger();
+                      pPylonSDK->pCamera->RetrieveResult(10*parameters->exposureTime_QPC,grabptr);
+                      
 #else /* HAVE_PYLON_SDK */
                       assert(false == triggered);
 #endif /* HAVE_PYLON_SDK */
@@ -2620,17 +2625,20 @@ AcquisitionThread(
                 }
               else if (true == have_PylonSDK)
                 {
-                  // TODO: If possible add camera readiness test here!
+                    bool const trigger_ready = pPylonSDK->pCamera->WaitForFrameTriggerReady(parameters->exposureTime_QPC);
 
-                  assert(true == trigger_ready);
+                    assert(true == trigger_ready);
 
-                  BOOL const qpc_before = QueryPerformanceCounter( &QPC_before_trigger );
-                  assert(TRUE == qpc_before);
+                    BOOL const qpc_before = QueryPerformanceCounter(&QPC_before_trigger);
+                    assert(TRUE == qpc_before);
 
-                  if (true == trigger_on_time)
+                    if (true == trigger_on_time)
                     {
-#ifdef HAVE_PYLON_SDK
-                      // TODO: Triggering code goes here!
+    #ifdef HAVE_PYLON_SDK
+                        Pylon::CGrabResultPtr grabptr;
+                        pPylonSDK->pCamera->ExecuteSoftwareTrigger();
+                        pPylonSDK->pCamera->RetrieveResult(10 * parameters->exposureTime_QPC, grabptr);
+
 #else /* HAVE_PYLON_SDK */
                       assert(false == triggered);
 #endif /* HAVE_PYLON_SDK */
