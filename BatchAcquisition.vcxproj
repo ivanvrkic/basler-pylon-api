@@ -97,6 +97,7 @@
     <ClInclude Include="BatchAcquisitionProcessingPointCloud.h" />
     <ClInclude Include="BatchAcquisitionProcessingXML.h" />
     <ClInclude Include="BatchAcquisitionPylon.h" />
+    <ClInclude Include="BatchAcquisitionPylonCallbacks.h" />
     <ClInclude Include="BatchAcquisitionSpinnaker.h" />
     <ClInclude Include="BatchAcquisitionTiming.h" />
     <ClInclude Include="BatchAcquisitionWindowPreview.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="BatchAcquisitionProcessingPointCloud.cpp" />
     <ClCompile Include="BatchAcquisitionProcessingXML.cpp" />
     <ClCompile Include="BatchAcquisitionPylon.cpp" />
+    <ClCompile Include="BatchAcquisitionPylonCallbacks.cpp" />
     <ClCompile Include="BatchAcquisitionSpinnaker.cpp" />
     <ClCompile Include="BatchAcquisitionTiming.cpp" />
     <ClCompile Include="BatchAcquisitionWindowPreview.cpp" />

@@ -15,7 +15,9 @@
   Functions and wrappers for Baslers's Pylon SDK.
   
   \author Tomislav Petkovic
-  \date   2021-05-10
+  \author Luka Dosen
+  \author Ivan Vrkic
+  \date   2021-06-09
 */
 
 
@@ -54,8 +56,11 @@ AcquisitionParametersPylonBlank_inline(
   assert(NULL != P);
   if (NULL == P) return;
 
-  // TODO: Add blanking code.
+  P->pCameraArray = NULL;
   P->pCamera = NULL;
+  P->pCameraEventHandler = NULL;
+  P->pImageEventHandler = NULL;
+
 }
 /* AcquisitionParametersPylonBlank_inline */
 
@@ -67,6 +72,7 @@ AcquisitionParametersPylonBlank_inline(
 #ifdef HAVE_PYLON_SDK
 
 // TODO: Add image tranfer callback functions here if required.
+// NOTE: Image transfer callback is defined in BatchAcquisitionPylonCallbacks.cpp
 
 #endif /* HAVE_PYLON_SDK */
 
@@ -159,9 +165,13 @@ AcquisitionParametersPylonRelease(
     bool const stop = AcquisitionParametersPylonStopTransfer(P);
     assert(true == stop);
 
-    // TODO: Add code here!
 
-    SAFE_DELETE(P->pCamera);
+    SAFE_DELETE( P->pImageEventHandler );
+    SAFE_DELETE( P->pCameraEventHandler );
+    SAFE_DELETE( P->pCamera );
+    SAFE_DELETE( P->pCameraArray );
+
+
   }
 #endif /* HAVE_PYLON_SDK */
 
@@ -266,8 +276,10 @@ AcquisitionParametersPylonCreate(
   BOOL status = TRUE;
 
 #ifdef HAVE_PYLON_SDK
+
   DeviceInfoList_t devices;
-  CInstantCameraArray cameras(1);//devices.size());
+
+
   /****** PRINT SDK INFO******/
 
   // TODO: Add SDK info dump here!
@@ -289,6 +301,36 @@ AcquisitionParametersPylonCreate(
       goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
   }
   // Get all attached devices and exit application if no device is found.
+
+  
+  if (tlFactory.EnumerateDevices(devices) == 0)
+  {
+      
+      status = FALSE;
+      goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
+  }
+  
+  assert(NULL == P->pCameraArray);
+  P->pCameraArray = new CInstantCameraArray(devices.size());
+  assert(NULL != P->pCameraArray);
+  if (NULL == P->pCameraArray)
+  {
+      status = FALSE;
+      goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
+  }
+  
+
+  // Create and attach all Pylon Devices.
+  for (size_t i = 0; i < P->pCameraArray->GetSize(); ++i)
+  {
+      ( *(P->pCameraArray) )[i].Attach(tlFactory.CreateDevice(devices[i]));
+
+      // Print the model name of the camera.
+      cout << "Using device " << (*(P->pCameraArray))[i].GetDeviceInfo().GetModelName() << endl;
+      // Print the camera serial number in case of same model cameras
+      //cout << "Using device " << cameras[i].GetDeviceInfo().GetSerialNumber << endl;
+  }
+
   
   if (tlFactory.EnumerateDevices(devices) == 0)
   {
@@ -313,23 +355,105 @@ AcquisitionParametersPylonCreate(
 
   // TODO: Add camera configuration code here!
 
+  for (size_t i = 0; i < P->pCameraArray->GetSize(); ++i)
+  {
+
+      // Open the camera for accessing the parameters.
+      (*(P->pCameraArray))[i].Open();
+
+      GenApi::INodeMap& nodemap = (*(P->pCameraArray))[i].GetNodeMap();
+
+      // Get camera device information.
+      cout << "Camera Device Information" << endl
+          << "=========================" << endl;
+      cout << "Vendor           : "
+          << CStringParameter(nodemap, "DeviceVendorName").GetValue() << endl;
+      cout << "Model            : "
+          << CStringParameter(nodemap, "DeviceModelName").GetValue() << endl;
+      cout << "Firmware version : "
+          << CStringParameter(nodemap, "DeviceFirmwareVersion").GetValue() << endl << endl;
+
+      // Camera settings.
+      cout << "Camera Device Settings" << endl
+          << "======================" << endl;
+
+
+      // Get the parameters for setting the image area of interest (Image AOI).
+      CIntegerParameter width(nodemap, "Width");
+      CIntegerParameter height(nodemap, "Height");
+      CIntegerParameter offsetX(nodemap, "OffsetX");
+      CIntegerParameter offsetY(nodemap, "OffsetY");
+
+      //offsetX.TrySetToMinimum();
+      //offsetY.TrySetToMinimum();
+   
+
+      // Maximize the Image AOI.
+      offsetX.TrySetToMinimum(); // Set to minimum if writable.
+      offsetY.TrySetToMinimum(); // Set to minimum if writable.
+      width.SetToMaximum();
+      height.SetToMaximum();
+
+      // Set the pixel data format.
+      CEnumParameter(nodemap, "PixelFormat").SetValue("Mono8");
+
+      // Access the PixelFormat enumeration type node.
+      CEnumParameter pixelFormat(nodemap, "PixelFormat");
+
+      // Remember the current pixel format.
+      String_t oldPixelFormat = pixelFormat.GetValue();
+      cout << "Old PixelFormat  : " << oldPixelFormat << endl;
+
+      // Set the pixel format to Mono8 if available.
+      if (pixelFormat.CanSetValue("Mono8"))
+      {
+          pixelFormat.SetValue("Mono8");
+          cout << "New PixelFormat  : " << pixelFormat.GetValue() << endl;
+      }
+
+
+      // Set the new gain to 50% ->  Min + ((Max-Min) / 2).
+      CEnumParameter gainAuto(nodemap, "GainAuto");
+      gainAuto.TrySetValue("Off");
+
+
+
+          // Access the GainRaw integer type node. This node is available for IIDC 1394 and GigE camera devices.
+          CIntegerParameter gainRaw(nodemap, "GainRaw");
+          gainRaw.SetValuePercentOfRange(50.0);
+          cout << "Gain (50%)       : " << gainRaw.GetValue() << " (Min: " << gainRaw.GetMin() << "; Max: " << gainRaw.GetMax() << "; Inc: " << gainRaw.GetInc() << ")" << endl;
+
+
+      // Restore the old pixel format.
+      pixelFormat.SetValue(oldPixelFormat);
+
+      // Close the camera.
+      (*(P->pCameraArray))[i].Close();
+  }
+  
   
   /****** CREATE REQUIRED ADDITIONAL CLASSES ******/
 
   // TODO: Add initialization code here!
 
   assert(NULL != P->pCameraEventHandler);
-  P->pCameraEventHandler = new CCustomCameraEventHandler;
-  assert(NULL != P->pCameraEventHandler);
-  assert(NULL != P->pImageEventHandler);
-  P->pImageEventHandler = new CCustomImageEventHandler;
-  assert(NULL != P->pImageEventHandler);
 
+  P->pCameraEventHandler = new CCustomCameraEventHandler(parameters);
+  assert(NULL != P->pCameraEventHandler);
+  
+  assert(NULL != P->pImageEventHandler);
+  P->pImageEventHandler = new CCustomImageEventHandler(parameters);
+  assert(NULL != P->pImageEventHandler);  
+
+  
   /****** REGISTER CALLBACKS ******/
+
+  // TODO: If callbacks are used add callback registration here!
 
   P->pCamera->RegisterConfiguration(new CSoftwareTriggerConfiguration, RegistrationMode_ReplaceAll, Cleanup_Delete);
   ////P->pCamera.RegisterConfiguration(new CConfigurationEventPrinter, RegistrationMode_Append, Cleanup_Delete); // Camera use.
-  P->pCamera->RegisterImageEventHandler(new CCustomImageEventHandler, RegistrationMode_Append, Cleanup_Delete);
+  P->pCamera->RegisterImageEventHandler(P->pImageEventHandler, RegistrationMode_Append, Cleanup_Delete);
+
   P->pCamera->GrabCameraEvents = true;
   P->pCamera->Open();
   //assert(P->pCamera->EventSelector->IsWritable());
@@ -357,8 +481,8 @@ AcquisitionParametersPylonCreate(
   //    {
   //        P->pCamera.EventNotification.SetValue(EventNotification_GenICamEvent);
   //    }
-  //}
-  
+  //}  
+
 
   /****** START ACQUISITION ******/
 

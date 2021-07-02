@@ -4,17 +4,19 @@
  * Faculty of Electrical Engineering and Computing (http://www.fer.unizg.hr/)
  * Unska 3, HR-10000 Zagreb, Croatia
  *
- * (c) 2014 UniZG, Zagreb. All rights reserved.
- * (c) 2014 FER, Zagreb. All rights reserved.
+ * (c) 2021 UniZG, Zagreb. All rights reserved.
+ * (c) 2021 FER, Zagreb. All rights reserved.
  */
 
- /*!
-   \file   BatchAcquisitionPylonCallbacks.h
-   \brief  Callback functions.
+/*!
+  \file   BatchAcquisitionPylonCallbacks.h
+  \brief  Callback functions.
 
-   \author Ivan Vrkic
-   \date   2014-05-20
- */
+  \author Ivan Vrkic
+  \autor  Tomislav Petkovic
+  \date   2021-06-09
+*/
+
 
 
 #ifndef __BATCHACQUISITIONPYLONCALLBACKS_H
@@ -24,86 +26,137 @@
 #include "BatchAcquisition.h"
 #include "BatchAcquisitionEvents.h"
 #include "BatchAcquisitionWindowDisplay.h"
- // Include file to use pylon universal instant camera parameters.
-#include <pylon/BaslerUniversalInstantCamera.h>
 
 
 
+struct AcquisitionParameters_;
 
-#ifndef STRING_LENGTH
-#define STRING_LENGTH 256
-#endif /* !STRING_LENGTH */
+
+//! Enumeration of handled events.
+/*!
+  Each of handled events must have an unique ID assigned.
+  We let the compiler assign numbers to names of the events.
+*/
+typedef
+enum CustomPylonEvents_
+  {
+    ExposureEndEventID, /*!< */
+    EventOverrunEventID, /*!< */
+    FrameStartEventID, /*!< */
+    FrameTriggerMissedEventID, /*!< */
+    FrameStartWaitEventID /*!< */
+  } CustomPylonEvents;
 
 
 #ifdef HAVE_PYLON_SDK
 
-// Namespace for using pylon objects.
+// Include file to use pylon universal instant camera parameters.
+#include <pylon/BaslerUniversalInstantCamera.h>
 
 
-// Namespace for using pylon universal instant camera parameters.
-using namespace Basler_UniversalCameraParams;
+//! Configuration event handler class.
+/*!
+  Derived class to hold all configuration event handlers.
+*/
+class CCustomConfigurationEventHandler : public Pylon::CConfigurationEventHandler
+{
+  
+public:
+  
+  void OnAttach(Pylon::CInstantCamera &);
+  void OnAttached(Pylon::CInstantCamera &);
+  void OnOpen(Pylon::CInstantCamera &);
+  void OnOpened(Pylon::CInstantCamera &);
+  void OnGrabStart(Pylon::CInstantCamera &);
+  void OnGrabStarted(Pylon::CInstantCamera &);
+  void OnGrabStop(Pylon::CInstantCamera &);
+  void OnGrabStopped(Pylon::CInstantCamera &);
+  void OnClose(Pylon::CInstantCamera &);
+  void OnClosed(Pylon::CInstantCamera &);
+  void OnDestroy(Pylon::CInstantCamera &);
+  void OnDestroyed(Pylon::CInstantCamera &);
+  void OnDetach(Pylon::CInstantCamera &);
+  void OnDetached(Pylon::CInstantCamera &);
+  void OnGrabError(Pylon::CInstantCamera &, char const *);
+  void OnCameraDeviceRemoved(Pylon::CInstantCamera &);
+  
+};
 
-// Namespace for using cout.
-using namespace std;
 
 
-namespace Pylon {
-    class CInstantCamera;
+//! Image event handler class.
+/*!
+  Derived class to hold all image event handlers.
+*/
+class CCustomImageEventHandler : public Pylon::CImageEventHandler
+{
+  
+private:
+  
+  AcquisitionParameters_ * pAcquisition = NULL; //!< Pointer to the acquisition parameters structure.
 
-    class CCustomConfigurationEventHandler : public CConfigurationEventHandler
-    {
-    public:
-        void OnAttach(CInstantCamera& /*camera*/);
-        void OnAttached(CInstantCamera& camera);
-        void OnOpen(CInstantCamera& camera);
-        void OnOpened(CInstantCamera& camera);
-        void OnGrabStart(CInstantCamera& camera);
-        void OnGrabStarted(CInstantCamera& camera);
-        void OnGrabStop(CInstantCamera& camera);
-        void OnGrabStopped(CInstantCamera& camera);
-        void OnClose(CInstantCamera& camera);
-        void OnClosed(CInstantCamera& camera);
-        void OnDestroy(CInstantCamera& camera);
-        void OnDestroyed(CInstantCamera& /*camera*/);
-        void OnDetach(CInstantCamera& camera);
-        void OnDetached(CInstantCamera& camera);
-        void OnGrabError(CInstantCamera& camera, const char* errorMessage);
-        void OnCameraDeviceRemoved(CInstantCamera& camera);
-    };
+public:
 
-    //Example of an image event handler.
-    class CCustomImageEventHandler : public CImageEventHandler
-    {
-    private:
-        DisplayWindowParameters* pWindow; //!< Display window.
-        int timeout; //!< Timeout in ms.
-        int CameraID;
-        volatile bool fThrottleDown; //!< Flag to indicate we must slow down the acquisition.
-    public:
-        virtual void OnImageGrabbed(CInstantCamera& /*camera*/, const CGrabResultPtr& ptrGrabResult);
-        virtual void OnImagesSkipped(CInstantCamera& camera, size_t countOfSkippedImages);
-    };
-
+  //! Constructor.
+  /*!
+    Constructs the event handler class.
     
-    // Example handler for camera events.
-    class CCustomCameraEventHandler : public CBaslerUniversalCameraEventHandler
-    {
-    private:
-        bool fExposureInProgress;
-        SynchronizationEvents * pSynchronization;
-        int CameraID;
+    \param ptr Pointer to the structure which holds the state of the acquisition thread.
+  */  
+  CCustomImageEventHandler(
+                           AcquisitionParameters_ * const ptr
+                           )
+    : Pylon::CImageEventHandler()
+  {
+    assert(NULL != ptr);
+    this->pAcquisition = ptr;
+  };
+  /* CCustomImageEventHandler */
 
-    public:
-        CCustomCameraEventHandler(): CBaslerUniversalCameraEventHandler() {}
-
-        // Only very short processing tasks should be performed by this method. Otherwise, the event notification will block the
-        // processing of images.
-        virtual void OnCameraEvent(CBaslerUniversalInstantCamera& camera, intptr_t userProvidedId, GenApi::INode* /* pNode */);
-    };
-}
+  
+  virtual void OnImageGrabbed(Pylon::CInstantCamera &, const Pylon::CGrabResultPtr &);
+  virtual void OnImagesSkipped(Pylon::CInstantCamera &, size_t);
+  
+};
 
 
-#endif /* HAVE_PYLON_SDK */s
+
+//! Universal event handler class.
+/*!
+  Derived class to hold all image event handlers.
+*/
+class CCustomCameraEventHandler : public Pylon::CBaslerUniversalCameraEventHandler
+{
+  
+private:
+  
+  AcquisitionParameters_ * pAcquisition = NULL; //!< Pointer to acquisition parameters structure.
+
+public:
+
+  //! Constructor.
+  /*!
+    Constructs the event handler class.
+
+    \param ptr	Pointer to the structure which holds the state of the acquisition thread.
+  */
+  CCustomCameraEventHandler(
+                            AcquisitionParameters_ * const ptr
+                            )
+    : Pylon::CBaslerUniversalCameraEventHandler()
+  {
+    assert(NULL != ptr);
+    this->pAcquisition = ptr;
+  };
+  /* CCustomCameraEventHandler */
+
+  
+  virtual void OnCameraEvent(Pylon::CBaslerUniversalInstantCamera &, intptr_t, GenApi::INode *);
+  
+};
+
+
+#endif /* HAVE_PYLON_SDK */
 
 
 #endif /* !__BATCHACQUISITIONPYLONCALLBACKS_H */
