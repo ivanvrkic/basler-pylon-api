@@ -30,6 +30,7 @@
 
 #include "BatchAcquisitionMessages.h"
 #include "BatchAcquisitionPylon.h"
+
 #include "BatchAcquisitionAcquisition.h"
 #include "BatchAcquisitionWindowPreview.h"
 #include "BatchAcquisitionKeyboard.h"
@@ -59,6 +60,7 @@ AcquisitionParametersPylonBlank_inline(
   P->pCamera = NULL;
   P->pCameraEventHandler = NULL;
   P->pImageEventHandler = NULL;
+
 }
 /* AcquisitionParametersPylonBlank_inline */
 
@@ -163,10 +165,13 @@ AcquisitionParametersPylonRelease(
     bool const stop = AcquisitionParametersPylonStopTransfer(P);
     assert(true == stop);
 
+
     SAFE_DELETE( P->pImageEventHandler );
     SAFE_DELETE( P->pCameraEventHandler );
     SAFE_DELETE( P->pCamera );
     SAFE_DELETE( P->pCameraArray );
+
+
   }
 #endif /* HAVE_PYLON_SDK */
 
@@ -279,6 +284,7 @@ AcquisitionParametersPylonCreate(
 
   // TODO: Add SDK info dump here!
   
+  
 
   /****** SELECT CAMERA ******/
 
@@ -295,6 +301,7 @@ AcquisitionParametersPylonCreate(
       goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
   }
   // Get all attached devices and exit application if no device is found.
+
   
   if (tlFactory.EnumerateDevices(devices) == 0)
   {
@@ -323,7 +330,26 @@ AcquisitionParametersPylonCreate(
       // Print the camera serial number in case of same model cameras
       //cout << "Using device " << cameras[i].GetDeviceInfo().GetSerialNumber << endl;
   }
+
   
+  if (tlFactory.EnumerateDevices(devices) == 0)
+  {
+      
+      status = FALSE;
+      goto ACQUISITION_PARAMETERS_PYLON_CREATE_EXIT;
+  }
+  
+
+
+  // Create and attach all Pylon Devices.
+  for (size_t i = 0; i < cameras.GetSize(); ++i)
+  {
+      cameras[i].Attach(tlFactory.CreateDevice(devices[i]));
+
+      // Print the model name of the camera.
+      cout << "Using device " << cameras[i].GetDeviceInfo().GetModelName() << endl;
+  }
+
 
   /****** CONFIGURE CAMERA ******/
 
@@ -411,6 +437,7 @@ AcquisitionParametersPylonCreate(
   // TODO: Add initialization code here!
 
   assert(NULL != P->pCameraEventHandler);
+
   P->pCameraEventHandler = new CCustomCameraEventHandler(parameters);
   assert(NULL != P->pCameraEventHandler);
   
@@ -426,6 +453,7 @@ AcquisitionParametersPylonCreate(
   P->pCamera->RegisterConfiguration(new CSoftwareTriggerConfiguration, RegistrationMode_ReplaceAll, Cleanup_Delete);
   ////P->pCamera.RegisterConfiguration(new CConfigurationEventPrinter, RegistrationMode_Append, Cleanup_Delete); // Camera use.
   P->pCamera->RegisterImageEventHandler(P->pImageEventHandler, RegistrationMode_Append, Cleanup_Delete);
+
   P->pCamera->GrabCameraEvents = true;
   P->pCamera->Open();
   //assert(P->pCamera->EventSelector->IsWritable());
@@ -454,6 +482,7 @@ AcquisitionParametersPylonCreate(
   //        P->pCamera.EventNotification.SetValue(EventNotification_GenICamEvent);
   //    }
   //}  
+
 
   /****** START ACQUISITION ******/
 

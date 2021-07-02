@@ -25,7 +25,6 @@
 #include "BatchAcquisitionPylonCallbacks.h"
 
 
-
 //! Parameters of the Pylon camera.
 /*!
   All classes and information needed to control a Pylon SDK camera
@@ -45,6 +44,7 @@ struct AcquisitionParametersPylon_
   void * pCamera;
   void * pCameraEventHandler;
   void * pImageEventHandler;
+
 #endif /* HAVE_PYLON_SDK */
 
 } AcquisitionParametersPylon;

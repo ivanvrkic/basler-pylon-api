@@ -18,6 +18,7 @@
 */
 
 
+
 #ifndef __BATCHACQUISITIONPYLONCALLBACKS_H
 #define __BATCHACQUISITIONPYLONCALLBACKS_H
 
@@ -25,6 +26,7 @@
 #include "BatchAcquisition.h"
 #include "BatchAcquisitionEvents.h"
 #include "BatchAcquisitionWindowDisplay.h"
+
 
 
 struct AcquisitionParameters_;
@@ -46,9 +48,7 @@ enum CustomPylonEvents_
   } CustomPylonEvents;
 
 
-
 #ifdef HAVE_PYLON_SDK
-
 
 // Include file to use pylon universal instant camera parameters.
 #include <pylon/BaslerUniversalInstantCamera.h>
